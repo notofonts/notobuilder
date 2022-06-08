@@ -198,9 +198,9 @@ class NotoBuilder(GFBuilder):
                 self.logger.info("Building UFO file for subset font "+font_name)
                 path = self.glyphs_to_ufo(path)
         source_ds = designspaceLib.DesignSpaceDocument.fromfile(path)
-        source_ufo = self.find_source(source_ds, location, font_name).path
+        source_ufo = self.find_source(source_ds, location, font_name)
         if source_ufo:
-            return ufoLib2.Font.open(source_ufo)
+            return ufoLib2.Font.open(source_ufo.path)
         return None
 
     def find_source(self, source_ds, location, font_name):
