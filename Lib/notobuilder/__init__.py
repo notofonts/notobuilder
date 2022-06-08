@@ -136,9 +136,12 @@ class NotoBuilder(GFBuilder):
                 original_ufo.save(newpath, overwrite=True)
 
                 master.path = newpath
+                added_subsets = False
 
                 for subset in self.config["includeSubsets"]:
-                    self.add_subset(ds, master, subset)
+                    added_subsets |= self.add_subset(ds, master, subset)
+                if not add_subsets:
+                    raise ValueError("Could not match *any* subsets for this font")
             # # Set instance filenames to temporary
             for instance in ds.instances:
                 instance.filename = instance.path = os.path.join(new_ds_file_dir.name, os.path.basename(instance.filename))
@@ -167,11 +170,14 @@ class NotoBuilder(GFBuilder):
         for axis in ds.axes:
             location[axis.name] = axis.map_backward(location[axis.name])
         source_ufo = self.obtain_noto_ufo(subset["from"], location)
+        if not source_ufo:
+            return False
         target_ufo = ufoLib2.Font.open(ds_source.path)
         merge_ufos(
             target_ufo, source_ufo, codepoints=unicodes, existing_handling="skip",
         )
         target_ufo.save(ds_source.path, overwrite=True)
+        return True
 
     def obtain_noto_ufo(self, font_name, location):
         if font_name == "Noto Sans":
@@ -192,9 +198,10 @@ class NotoBuilder(GFBuilder):
                 self.logger.info("Building UFO file for subset font "+font_name)
                 path = self.glyphs_to_ufo(path)
         source_ds = designspaceLib.DesignSpaceDocument.fromfile(path)
-
-        # Find a source for this location
-        return ufoLib2.Font.open(self.find_source(source_ds, location, font_name).path)
+        source_ufo = self.find_source(source_ds, location, font_name).path
+        if source_ufo:
+            return ufoLib2.Font.open(source_ufo)
+        return None
 
     def find_source(self, source_ds, location, font_name):
         source_mappings = {
@@ -212,8 +219,8 @@ class NotoBuilder(GFBuilder):
         if target:
             self.logger.info(f"Adding subset from {target} for location {location}")
             return target
-        self.logger.error(f"Could not find master in {font_name} for location {location}")
-        raise ValueError("Could not add subset")
+        self.logger.warning(f"Could not find master in {font_name} for location {location}")
+        return None
 
     def clone_for_subsetting(self, repo):
         dest = "../subset-files/" + repo
