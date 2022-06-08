@@ -10,6 +10,6 @@ setup(
     install_requires=[
         "fontmake>=3.3",
         "ufo2ft>=2.27.0",
-        "gftools @ git+https://github.com/googlefonts/gftools",
+        "gftools @ git+https://github.com/googlefonts/gftools@diffenator2",
     ]
 )
