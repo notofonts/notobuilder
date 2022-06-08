@@ -129,6 +129,7 @@ class NotoBuilder(GFBuilder):
             new_ds_file_dir = tempfile.TemporaryDirectory()
             temporaries.append(new_ds_file_dir)
             ds = designspaceLib.DesignSpaceDocument.fromfile(ds_file)
+            added_subsets = False
             for master in ds.sources:
                 # Save a copy to temporary UFO
                 newpath = os.path.join(new_ds_file_dir.name, os.path.basename(master.path))
@@ -136,12 +137,11 @@ class NotoBuilder(GFBuilder):
                 original_ufo.save(newpath, overwrite=True)
 
                 master.path = newpath
-                added_subsets = False
 
                 for subset in self.config["includeSubsets"]:
                     added_subsets |= self.add_subset(ds, master, subset)
-                if not added_subsets:
-                    raise ValueError("Could not match *any* subsets for this font")
+            if not added_subsets:
+                raise ValueError("Could not match *any* subsets for this font")
             # # Set instance filenames to temporary
             for instance in ds.instances:
                 instance.filename = instance.path = os.path.join(new_ds_file_dir.name, os.path.basename(instance.filename))
