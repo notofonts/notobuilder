@@ -140,7 +140,7 @@ class NotoBuilder(GFBuilder):
 
                 for subset in self.config["includeSubsets"]:
                     added_subsets |= self.add_subset(ds, master, subset)
-                if not add_subsets:
+                if not added_subsets:
                     raise ValueError("Could not match *any* subsets for this font")
             # # Set instance filenames to temporary
             for instance in ds.instances:
