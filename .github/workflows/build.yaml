@@ -16,6 +16,10 @@ jobs:
         python-version: 3.8
     - uses: actions/cache@v2
       with:
+        path: ./subset-files
+        key: subsets
+    - uses: actions/cache@v2
+      with:
         path: ./venv/
         key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements*.txt') }}
         restore-keys: |
@@ -39,6 +43,8 @@ jobs:
     - name: Check with fontbakery
       run: make test
       continue-on-error: true
+    - name: Regression test
+      run: . venv/bin/activate; python3 -m notoqa.regression
     - name: proof
       run: make proof
     - name: setup site
