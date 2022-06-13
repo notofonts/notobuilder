@@ -10,7 +10,7 @@ jobs:
     - name: Test that GITHUB_TOKEN works
       run: gh repo list notofonts
       env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -43,7 +43,7 @@ jobs:
     - name: Regression test
       run: . venv/bin/activate; python3 -m notoqa.regression
       env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: proof
       run: make proof
     - name: Rebuild website
