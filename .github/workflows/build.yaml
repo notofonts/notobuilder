@@ -1,10 +1,7 @@
 name: Build font and specimen
 
 on:
-  workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
+  workflow_call
 jobs:
   build:
     runs-on: ubuntu-latest
