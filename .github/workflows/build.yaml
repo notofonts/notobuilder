@@ -29,13 +29,17 @@ jobs:
       shell: bash
       # Set the archive name to repo name + "-assets" e.g "MavenPro-assets"
       run: echo "ZIP_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')-fonts" >> $GITHUB_ENV
-    - name: Build font
-      run: make build
-    - name: Check with fontbakery
-      run: make test
-      continue-on-error: true
+    - name: Install requirements
+      run: make venv
+    # - name: Build font
+    #   run: make build
+    # - name: Check with fontbakery
+    #   run: make test
+    #   continue-on-error: true
     - name: Regression test
       run: . venv/bin/activate; python3 -m notoqa.regression
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}}
     - name: proof
       run: make proof
     - name: Rebuild website
