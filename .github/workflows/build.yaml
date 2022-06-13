@@ -15,12 +15,6 @@ jobs:
       with:
         path: ./subset-files
         key: subsets
-    - uses: actions/cache@v2
-      with:
-        path: ./venv/
-        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements*.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-venv-
     - name: Do first-run script if necessary
       run: make .init.stamp
       if: github.repository != 'notofonts/noto-project-template'
