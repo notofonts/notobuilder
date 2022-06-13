@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Test that GITHUB_TOKEN works
+      run: gh repo list notofonts
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}}
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
