@@ -1,6 +1,7 @@
 from . import NotoBuilder
 
 import argparse
+import logging
 
 parser = argparse.ArgumentParser(description="Build a Noto font")
 parser.add_argument("config", metavar="YAML", help="config files")
