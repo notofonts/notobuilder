@@ -29,14 +29,30 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     os.makedirs(fonts_before_dir, exist_ok=True)
 
     fonts_before = download_files_from_archive(previous_url, fonts_before_dir)
-    ttfonts_before = [
-        TTFont(f)
-        for f in fonts_before
-        if f.endswith((".ttf", ".otf")) and "static" not in f
-    ]
-
+    variables_before = [f for f in fonts_before if f.endswith(".ttf") and "unhinted/variable-ttf" in f]
     fonts_now = glob.glob(f"fonts/{family}/unhinted/ttf/*.ttf")
+    variables_now = glob.glob(f"fonts/{family}/unhinted/variable-ttf/*.ttf")
+
+    fonts_before = [f for f in fonts_before if f.endswith(".ttf") and "unhinted" in f]
+
+    # XXX This is a lovely idea but currently comparing variables against each
+    # other doesn't work.
+
+    # if variables_now and variables_before:
+    #     # Save time, just compare the variables
+    #     fonts_now = variables_now
+    #     fonts_before = variables_before
+
+    ttfonts_before = [TTFont(f) for f in fonts_before]
     ttfonts_now = [TTFont(f) for f in fonts_now]
+    print("Fonts before: ")
+    for s in fonts_before:
+        print(" * "+s)
+
+    print("Fonts now: ")
+    for s in fonts_now:
+        print(" * "+s)
+
     if not fonts_now:
         print(f"No current fonts to compare for {family}!")
         continue
