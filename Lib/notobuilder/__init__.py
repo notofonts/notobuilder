@@ -22,7 +22,7 @@ from fontTools import designspaceLib
 from glyphsets.codepoints import CodepointsInSubset
 from strictyaml import HexInt, Map, Optional, Seq, Str
 
-from gftools.builder import GFBuilder
+from gftools.builder.ninja import NinjaBuilder
 from gftools.builder.autohint import autohint
 from gftools.builder.schema import schema
 from gftools.ufomerge import merge_ufos
@@ -41,7 +41,7 @@ _newschema = schema._validator
 _newschema[Optional("includeSubsets")] = subsets_schema
 
 
-class NotoBuilder(GFBuilder):
+class NotoBuilder(NinjaBuilder):
     schema = Map(_newschema)
 
     def __init__(self, config):
@@ -58,6 +58,14 @@ class NotoBuilder(GFBuilder):
         self.logger = logging.getLogger("GFBuilder")
         self.fill_config_defaults()
 
+    def setup_rules(self):
+        super().setup_rules()
+        self.w.comment("Run ttfautohint if we can")
+        self.w.rule(
+            "autohint-noto",
+            "ttfautohint $in $out || cp $in $out",
+        )
+
     def get_family_name(self, source=None):
         if not source:
             source = self.config["sources"][0]
@@ -67,28 +75,17 @@ class NotoBuilder(GFBuilder):
         return fname
 
     def post_process_ttf(self, filename):
-        super().post_process_ttf(filename)
-        self.outputs.add(filename)
-        hinted_dir = self.config["ttDir"].replace("unhinted", "hinted")
-        os.makedirs(hinted_dir, exist_ok=True)
-        hinted = filename.replace("unhinted", "hinted")
-        try:
-            autohint(filename, hinted, add_script=True)
-        except Exception as e:
-            self.logger.error("Couldn't autohint %s: %s" % (filename, e))
-            # We just copy it and pretend.
-            shutil.copy(filename, hinted)
-        self.outputs.add(hinted)
+        if "full" in self.config["ttDir"]:
+            self.w.build(filename + ".autohintstamp", "autohint", filename)
+            self.temporaries.append(filename + ".autohintstamp")
+            self.post_process(filename, implicit=filename + ".autohintstamp")
+        else:
+            hinted_dir = self.config["ttDir"].replace("unhinted", "hinted")
+            os.makedirs(hinted_dir, exist_ok=True)
+            hinted = filename.replace("unhinted", "hinted")
+            self.w.build(hinted, "autohint-noto", filename)
+            self.post_process(hinted)
 
-    def post_process(self, filename):
-        super().post_process(filename)
-        self.outputs.add(filename)
-
-    def build_variable(self):
-        try:
-            super().build_variable()
-        except Exception as e:
-            self.logger.error("Couldn't build variable font: %s" % e)
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
