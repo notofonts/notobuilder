@@ -188,6 +188,7 @@ jobs:
       with:
         name: regression
         path: out
+      continue-on-error: true
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
