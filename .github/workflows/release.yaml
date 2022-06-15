@@ -47,8 +47,11 @@ jobs:
           release_name: ${{ github.ref_name }}
       - name: Tell user about release
         run: echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
+      - name: Find a DESCRIPTION.en_us.html
+        run: cp documentation/{{ steps.check_tag.outputs.family}}.html DESCRIPTION.en_us.html
+        continue-on-error: true
       - name: Create release bundle
-        run: cd fonts; zip -x requirements.txt -r ../${{ github.ref_name }}.zip ${{ steps.check_tag.outputs.family}}/ ../*.txt
+        run: cd fonts; zip -x requirements.txt -r ../${{ github.ref_name }}.zip ${{ steps.check_tag.outputs.family}}/ ../*.txt ../DESCRIPTION.en_us.html
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         id: upload
