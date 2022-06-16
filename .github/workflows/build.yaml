@@ -188,6 +188,7 @@ jobs:
       with:
         name: fontbakery-googlefonts
         path: out
+      continue-on-error: true
     - name: Download proof zip
       uses: actions/download-artifact@v3
       with:
