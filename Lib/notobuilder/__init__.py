@@ -54,6 +54,7 @@ class NotoBuilder(NinjaBuilder):
         self.config["ttDir"] = "../fonts/%s/unhinted/ttf" % family_dir
         self.config["buildWebfont"] = False
         self.config["autohintTTF"] = False  # We take care of it ourselves
+        self.config["includeSourceFixes"] = True  # Make everyone's life easier
         self.outputs = set()
         self.logger = logging.getLogger("GFBuilder")
         self.fill_config_defaults()
