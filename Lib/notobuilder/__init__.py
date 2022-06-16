@@ -44,7 +44,7 @@ _newschema[Optional("includeSubsets")] = subsets_schema
 class NotoBuilder(NinjaBuilder):
     schema = Map(_newschema)
 
-    def __init__(self, config):
+    def __init__(self, config, otfs=False):
         self.config = self.load_config(config)
         if os.path.dirname(config):
             os.chdir(os.path.dirname(config))
@@ -53,6 +53,7 @@ class NotoBuilder(NinjaBuilder):
         self.config["otDir"] = "../fonts/%s/unhinted/otf" % family_dir
         self.config["ttDir"] = "../fonts/%s/unhinted/ttf" % family_dir
         self.config["buildWebfont"] = False
+        self.config["buildOTF"] = otfs
         self.config["autohintTTF"] = False  # We take care of it ourselves
         self.config["includeSourceFixes"] = True  # Make everyone's life easier
         self.outputs = set()
