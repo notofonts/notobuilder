@@ -23,6 +23,7 @@ from glyphsets.codepoints import CodepointsInSubset
 from strictyaml import HexInt, Map, Optional, Seq, Str
 
 from gftools.builder.ninja import NinjaBuilder
+from gftools.util.styles import STYLE_NAMES
 from gftools.builder.autohint import autohint
 from gftools.builder.schema import schema
 from gftools.ufomerge import merge_ufos
@@ -44,7 +45,7 @@ _newschema[Optional("includeSubsets")] = subsets_schema
 class NotoBuilder(NinjaBuilder):
     schema = Map(_newschema)
 
-    def __init__(self, config, otfs=False):
+    def __init__(self, config, otfs=False, googlefonts=False):
         self.config = self.load_config(config)
         if os.path.dirname(config):
             os.chdir(os.path.dirname(config))
@@ -52,8 +53,13 @@ class NotoBuilder(NinjaBuilder):
         self.config["vfDir"] = "../fonts/%s/unhinted/variable-ttf" % family_dir
         self.config["otDir"] = "../fonts/%s/unhinted/otf" % family_dir
         self.config["ttDir"] = "../fonts/%s/unhinted/ttf" % family_dir
+        self.googlefonts = googlefonts
+        if self.googlefonts:
+            for key in ["vfDir", "otDir", "ttDir"]:
+                self.config[key] = self.config[key].replace("unhinted", "googlefonts")
         self.config["buildWebfont"] = False
         self.config["buildOTF"] = otfs
+        self.config["buildTTF"] = not otfs
         self.config["autohintTTF"] = False  # We take care of it ourselves
         self.config["includeSourceFixes"] = True  # Make everyone's life easier
         self.outputs = set()
@@ -77,7 +83,7 @@ class NotoBuilder(NinjaBuilder):
         return fname
 
     def post_process_ttf(self, filename):
-        if "full" in self.config["ttDir"]:
+        if "full" in self.config["ttDir"] or self.googlefonts:
             self.w.build(filename + ".autohintstamp", "autohint", filename)
             self.temporaries.append(filename + ".autohintstamp")
             self.post_process(filename, implicit=filename + ".autohintstamp")
@@ -93,17 +99,24 @@ class NotoBuilder(NinjaBuilder):
         source = Path(source)
         if directory is None:
             directory = source.resolve().parent
+        output = str(Path(directory) / source.with_suffix(".designspace").name)
         self.run_fontmake(
             str(source.resolve()),
             {
                 "format": ["ufo"],
                 "output_dir": directory,
                 "master_dir": directory,
-                "designspace_path": Path(directory)
-                / source.with_suffix(".designspace").name,
+                "designspace_path": output,
             },
         )
-        return str(Path(directory) / source.with_suffix(".designspace").name)
+        if self.googlefonts:
+            ds = designspaceLib.DesignSpaceDocument.fromfile(output)
+            ds.instances = [
+                i for i in ds.instances if i.styleName in STYLE_NAMES
+            ]
+            ds.write(output)
+
+        return str(output)
 
     def build(self):
         # First convert to Designspace/UFO
@@ -112,7 +125,8 @@ class NotoBuilder(NinjaBuilder):
                 self.config["sources"][ix] = self.glyphs_to_ufo(source)
 
         # Do a basic build first
-        super().build()
+        if not self.googlefonts or not "includeSubsets" in self.config:
+            super().build()
 
         # Merge UFOs
         if not "includeSubsets" in self.config:
