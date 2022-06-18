@@ -9,6 +9,7 @@ setup(
     packages=["notobuilder", "notoqa"],
     install_requires=[
         "fontmake>=3.3",
+        "ttfautohint-py",
         "ufo2ft>=2.27.0",
         "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools@noto",
         "fontbakery>=0.8",
