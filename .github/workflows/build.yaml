@@ -281,7 +281,7 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run: make venv
-      - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
+      - run: pip3 install 'git+https://github.com/googlefonts/gftools@noto#egg=gftools'
       - name: Download font zip
         uses: actions/download-artifact@v3
         with:
