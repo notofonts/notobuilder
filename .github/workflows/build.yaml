@@ -272,7 +272,6 @@ jobs:
     name: Create release
     outputs:
       url: ${{ steps.upload.outputs.browser_download_url }}
-      real_family_name: ${{ steps.check_tag.outputs.real_family_name }}
       config_file: ${{ steps.check_tag.outputs.config_file }}
     steps:
       - uses: actions/checkout@v2
