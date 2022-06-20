@@ -73,6 +73,11 @@ class NotoBuilder(NinjaBuilder):
             "autohint-noto",
             "ttfautohint $in $out || cp $in $out",
         )
+        self.w.comment("Build slim variable font")
+        self.w.rule(
+            "slim-vf",
+            "fonttools varLib.instancer -o $out $in wght=200:700",
+        )
 
     def get_family_name(self, source=None):
         if not source:
@@ -93,6 +98,16 @@ class NotoBuilder(NinjaBuilder):
             hinted = filename.replace("unhinted", "hinted")
             self.w.build(hinted, "autohint-noto", filename)
             self.post_process(hinted)
+
+    def post_process(self, file, implicit=None):
+        super().post_process(file, implicit=implicit)
+        if "].ttf" in file:
+            slim_vf_dir = self.config["vfDir"].replace("variable-ttf", "slim-variable-ttf")
+            os.makedirs(slim_vf_dir, exist_ok=True)
+            target = os.path.join(slim_vf_dir, os.path.basename(file))
+            target = re.sub("\[.*\].ttf$", "[wght].ttf", target)
+            self.w.build(target, "slim-vf", file, implicit=implicit)
+
 
 
     def glyphs_to_ufo(self, source, directory=None):
