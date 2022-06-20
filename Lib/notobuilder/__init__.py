@@ -19,7 +19,7 @@ from pathlib import Path
 import pygit2
 import ufoLib2
 from fontTools import designspaceLib
-from glyphsets.codepoints import CodepointsInSubset
+from glyphsets import GFGlyphData
 from strictyaml import HexInt, Map, Optional, Seq, Str
 
 from gftools.builder.ninja import NinjaBuilder
@@ -197,7 +197,7 @@ class NotoBuilder(NinjaBuilder):
     def add_subset(self, ds, ds_source, subset):
         if "name" in subset:
             # Resolve to glyphset
-            unicodes = CodepointsInSubset(subset["name"])
+            unicodes = [x["unicode"] for x in GFGlyphData.glyphs_in_glyphsets([subset]) if x["unicode"]]
         else:
             unicodes = []
             for r in subset["ranges"]:
