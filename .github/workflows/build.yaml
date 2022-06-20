@@ -74,7 +74,7 @@ jobs:
       run: |
         for family_path in fonts/*; do
           family=`basename $family_path`
-          fontbakery check-notofonts -j --configuration fontbakery.yml -l WARN --succinct --badges out/badges --html out/fontbakery/notofonts-$family-report.html --ghmarkdown out/fontbakery/notofonts-$family-report.md $family_path/hinted/*ttf/*ttf
+          fontbakery check-notofonts --configuration fontbakery.yml -l WARN --succinct --badges out/badges --html out/fontbakery/notofonts-$family-report.html --ghmarkdown out/fontbakery/googlefonts-$family-report.md $family_path/hinted/*ttf/*ttf
         done
       continue-on-error: true
     - name: Archive artifacts
@@ -109,7 +109,7 @@ jobs:
       run: |
         for family_path in fonts/*; do
           family=`basename $family_path`
-          fontbakery check-googlefonts -j --configuration fontbakery.yml -l WARN --succinct --badges out/badges --html out/fontbakery/googlefonts-$family-report.html --ghmarkdown out/fontbakery/notofonts-$family-report.md $family_path/full/*ttf/*ttf
+          fontbakery check-googlefonts --configuration fontbakery.yml -l WARN --succinct --badges out/badges --html out/fontbakery/googlefonts-$family-report.html --ghmarkdown out/fontbakery/googlefonts-$family-report.md $family_path/full/*ttf/*ttf
         done
       continue-on-error: true
     - name: Archive artifacts
