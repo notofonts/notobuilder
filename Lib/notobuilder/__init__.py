@@ -124,6 +124,15 @@ class NotoBuilder(NinjaBuilder):
             if source.endswith(".glyphs"):
                 self.config["sources"][ix] = self.glyphs_to_ufo(source)
 
+        # Turn off variable font support for things which don't vary
+        for source in self.config["sources"]:
+            if source.endswith(".ufo"):
+                self.config["buildVariable"] = False
+            elif source.endswith(".designspace"):
+                ds = designspaceLib.DesignSpaceDocument.fromfile(source)
+                if len(ds.sources) == 1:
+                    self.config["buildVariable"] = False
+
         # Do a basic build first
         if not self.googlefonts or not "includeSubsets" in self.config:
             super().build()
