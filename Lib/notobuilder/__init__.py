@@ -20,7 +20,7 @@ import pygit2
 import ufoLib2
 from fontTools import designspaceLib
 from glyphsets import GFGlyphData
-from strictyaml import HexInt, Map, Optional, Seq, Str
+from strictyaml import HexInt, Map, Optional, Seq, Str, Bool
 
 from gftools.builder.ninja import NinjaBuilder
 from gftools.util.styles import STYLE_NAMES
@@ -40,12 +40,13 @@ subsets_schema = Seq(
 )
 _newschema = schema._validator
 _newschema[Optional("includeSubsets")] = subsets_schema
+_newschema[Optional("forceSubsets")] = Bool()
 
 
 class NotoBuilder(NinjaBuilder):
     schema = Map(_newschema)
 
-    def __init__(self, config, otfs=False, googlefonts=False):
+    def __init__(self, config, otfs=False, googlefonts=False, debug=False):
         self.config = self.load_config(config)
         if os.path.dirname(config):
             os.chdir(os.path.dirname(config))
@@ -54,6 +55,7 @@ class NotoBuilder(NinjaBuilder):
         self.config["otDir"] = "../fonts/%s/unhinted/otf" % family_dir
         self.config["ttDir"] = "../fonts/%s/unhinted/ttf" % family_dir
         self.googlefonts = googlefonts
+        self.debug = debug
         if self.googlefonts:
             for key in ["vfDir", "otDir", "ttDir"]:
                 self.config[key] = self.config[key].replace("unhinted", "googlefonts")
@@ -102,13 +104,13 @@ class NotoBuilder(NinjaBuilder):
     def post_process(self, file, implicit=None):
         super().post_process(file, implicit=implicit)
         if "].ttf" in file:
-            slim_vf_dir = self.config["vfDir"].replace("variable-ttf", "slim-variable-ttf")
+            slim_vf_dir = self.config["vfDir"].replace(
+                "variable-ttf", "slim-variable-ttf"
+            )
             os.makedirs(slim_vf_dir, exist_ok=True)
             target = os.path.join(slim_vf_dir, os.path.basename(file))
             target = re.sub("\[.*\].ttf$", "[wght].ttf", target)
             self.w.build(target, "slim-vf", file, implicit=implicit)
-
-
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
@@ -126,9 +128,7 @@ class NotoBuilder(NinjaBuilder):
         )
         if self.googlefonts:
             ds = designspaceLib.DesignSpaceDocument.fromfile(output)
-            ds.instances = [
-                i for i in ds.instances if i.styleName in STYLE_NAMES
-            ]
+            ds.instances = [i for i in ds.instances if i.styleName in STYLE_NAMES]
             ds.write(output)
 
         return str(output)
@@ -163,13 +163,20 @@ class NotoBuilder(NinjaBuilder):
         temporaries = []
 
         for ds_file in self.config["sources"]:
-            new_ds_file_dir = tempfile.TemporaryDirectory()
-            temporaries.append(new_ds_file_dir)
+            if self.debug:
+                new_ds_file_dirname = "debug-subset"
+                os.makedirs(new_ds_file_dirname, exist_ok=True)
+            else:
+                new_ds_file_dir = tempfile.TemporaryDirectory()
+                temporaries.append(new_ds_file_dir)
+                new_ds_file_dirname = new_ds_file_dir.name
             ds = designspaceLib.DesignSpaceDocument.fromfile(ds_file)
             added_subsets = False
             for master in ds.sources:
                 # Save a copy to temporary UFO
-                newpath = os.path.join(new_ds_file_dir.name, os.path.basename(master.path))
+                newpath = os.path.join(
+                    new_ds_file_dirname, os.path.basename(master.path)
+                )
                 original_ufo = ufoLib2.Font.open(master.path)
                 original_ufo.save(newpath, overwrite=True)
 
@@ -181,10 +188,12 @@ class NotoBuilder(NinjaBuilder):
                 raise ValueError("Could not match *any* subsets for this font")
             # # Set instance filenames to temporary
             for instance in ds.instances:
-                instance.filename = instance.path = os.path.join(new_ds_file_dir.name, os.path.basename(instance.filename))
+                instance.filename = instance.path = os.path.join(
+                    new_ds_file_dirname, os.path.basename(instance.filename)
+                )
 
             # Save new designspace to temporary
-            new_ds_file = os.path.join(new_ds_file_dir.name, os.path.basename(ds_file))
+            new_ds_file = os.path.join(new_ds_file_dirname, os.path.basename(ds_file))
             ds.write(new_ds_file)
 
             new_builder_sources.append(new_ds_file)
@@ -197,7 +206,11 @@ class NotoBuilder(NinjaBuilder):
     def add_subset(self, ds, ds_source, subset):
         if "name" in subset:
             # Resolve to glyphset
-            unicodes = [x["unicode"] for x in GFGlyphData.glyphs_in_glyphsets([subset["name"]]) if x["unicode"]]
+            unicodes = [
+                x["unicode"]
+                for x in GFGlyphData.glyphs_in_glyphsets([subset["name"]])
+                if x["unicode"]
+            ]
         else:
             unicodes = []
             for r in subset["ranges"]:
@@ -210,8 +223,14 @@ class NotoBuilder(NinjaBuilder):
         if not source_ufo:
             return False
         target_ufo = ufoLib2.Font.open(ds_source.path)
+        existing_handling = "skip"
+        if self.config.get("forceSubsets"):
+            existing_handling = "replace"
         merge_ufos(
-            target_ufo, source_ufo, codepoints=unicodes, existing_handling="skip",
+            target_ufo,
+            source_ufo,
+            codepoints=unicodes,
+            existing_handling=existing_handling,
         )
         target_ufo.save(ds_source.path, overwrite=True)
         return True
@@ -232,7 +251,7 @@ class NotoBuilder(NinjaBuilder):
             if os.path.exists(ds_path):
                 path = ds_path
             else:
-                self.logger.info("Building UFO file for subset font "+font_name)
+                self.logger.info("Building UFO file for subset font " + font_name)
                 path = self.glyphs_to_ufo(path)
         source_ds = designspaceLib.DesignSpaceDocument.fromfile(path)
         source_ufo = self.find_source(source_ds, location, font_name)
@@ -241,14 +260,16 @@ class NotoBuilder(NinjaBuilder):
         return None
 
     def find_source(self, source_ds, location, font_name):
-        source_mappings = {
-            ax.name: ax.map_forward for ax in source_ds.axes
-        }
+        source_mappings = {ax.name: ax.map_forward for ax in source_ds.axes}
         target = None
         for source in source_ds.sources:
             match = True
             for axis, loc in location.items():
-                if axis in source.location and axis in source_mappings and source.location[axis] != source_mappings[axis](loc):
+                if (
+                    axis in source.location
+                    and axis in source_mappings
+                    and source.location[axis] != source_mappings[axis](loc)
+                ):
                     match = False
             if match:
                 target = source
@@ -256,7 +277,9 @@ class NotoBuilder(NinjaBuilder):
         if target:
             self.logger.info(f"Adding subset from {target} for location {location}")
             return target
-        self.logger.warning(f"Could not find master in {font_name} for location {location}")
+        self.logger.warning(
+            f"Could not find master in {font_name} for location {location}"
+        )
         return None
 
     def clone_for_subsetting(self, repo):
@@ -267,7 +290,3 @@ class NotoBuilder(NinjaBuilder):
             os.mkdir("../subset-files")
         print(f"Cloning notofonts/{repo}")
         pygit2.clone_repository(f"https://github.com/notofonts/{repo}", dest)
-
-
-
-
