@@ -268,6 +268,18 @@ class NotoBuilder(NinjaBuilder):
         print(f"Cloning notofonts/{repo}")
         pygit2.clone_repository(f"https://github.com/notofonts/{repo}", dest)
 
+    def fontmake_args(self, args):
+        my_args = []
+        my_args.append("--filter ... --filter \"ufo2ft.filters.dottedCircleFilter::DottedCircleFilter(pre=True)\"")
+        if self.config["flattenComponents"]:
+            my_args.append("--filter FlattenComponentsFilter")
+        if self.config["decomposeTransformedComponents"]:
+            my_args.append("--filter DecomposeTransformedComponentsFilter")
+        if "output_dir" in args:
+            my_args.append("--output-dir " + args["output_dir"])
+        if "output_path" in args:
+            my_args.append("--output-path " + args["output_path"])
+        return " ".join(my_args)
 
 
 

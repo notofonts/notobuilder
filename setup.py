@@ -10,7 +10,7 @@ setup(
     install_requires=[
         "fontmake>=3.3",
         "ttfautohint-py",
-        "ufo2ft>=2.27.0",
+        "ufo2ft[compreffor]>=2.28.0a1",
         "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools@noto",
         "fontbakery>=0.8",
     ],
