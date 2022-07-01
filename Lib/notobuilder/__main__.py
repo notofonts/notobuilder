@@ -17,4 +17,9 @@ if args.verbose:
 builder = NotoBuilder(
     args.config, otfs=args.otfs, googlefonts=args.googlefonts, debug=args.debug
 )
+
+if args.debug:
+    builder.config["logLevel"] = "DEBUG"
+
 builder.build()
+
