@@ -114,7 +114,9 @@ class NotoBuilder(NinjaBuilder):
             os.makedirs(slim_vf_dir, exist_ok=True)
             target = os.path.join(slim_vf_dir, os.path.basename(file))
             target = re.sub("\[.*\].ttf$", "[wght].ttf", target)
-            self.w.build(target, "slim-vf", file, implicit=implicit)
+            # Slim VFs are an android thing
+            if not self.googlefonts:
+                self.w.build(target, "slim-vf", file, implicit=implicit)
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
