@@ -72,7 +72,7 @@ jobs:
       run: make venv
     - name: Build fonts
       run: |
-        (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --otfs $config; done)  && touch build.stamp
+        (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --otfs $config || ! break; done)  && touch build.stamp
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -97,7 +97,7 @@ jobs:
       run: make venv
     - name: Build fonts
       run: |
-        (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --googlefonts $config; done)  && touch build.stamp
+        (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --googlefonts $config || ! break; done)  && touch build.stamp
     - name: Archive artifacts
       uses: actions/upload-artifact@v2
       with:
