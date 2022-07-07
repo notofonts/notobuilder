@@ -19,6 +19,7 @@ from pathlib import Path
 import pygit2
 import ufoLib2
 from fontTools import designspaceLib
+from fontmake.font_project import FontProject
 from glyphsets import GFGlyphData
 from strictyaml import HexInt, Map, Optional, Seq, Str, Bool
 
@@ -48,6 +49,7 @@ class NotoBuilder(NinjaBuilder):
 
     def __init__(self, config, otfs=False, googlefonts=False, debug=False):
         self.config = self.load_config(config)
+        self.subset_instances = {}
         if os.path.dirname(config):
             os.chdir(os.path.dirname(config))
         family_dir = self.get_family_name().replace(" ", "")
@@ -280,13 +282,41 @@ class NotoBuilder(NinjaBuilder):
             if match:
                 target = source
                 break
+        if not target:
+            self.logger.info(f"Couldn't find a master from {font_name} for location {location}, trying instances")
+            # Try instances
+            for instance in source_ds.instances:
+                match = True
+                for axis, loc in location.items():
+                    if (
+                        axis in instance.location
+                        and axis in source_mappings
+                        and instance.location[axis] != source_mappings[axis](loc)
+                    ):
+                        match = False
+                if match:
+                    self.generate_subset_instances(source_ds, font_name)
+                    target = instance
+                    break
         if target:
-            self.logger.info(f"Adding subset from {target} for location {location}")
+            self.logger.info(f"Adding subset from {font_name} for location {location}")
             return target
-        self.logger.warning(
+
+        raise ValueError(
             f"Could not find master in {font_name} for location {location}"
         )
         return None
+
+    def generate_subset_instances(self, source_ds, font_name):
+        if source_ds in self.subset_instances:
+            return
+        self.logger.info(f"Generate UFO instances for {font_name}")
+        ufos = FontProject().interpolate_instance_ufos(source_ds)
+        self.subset_instances[source_ds] = ufos
+        for instance, ufo in zip(source_ds.instances, ufos):
+            instance.path = os.path.join(
+                os.path.dirname(source_ds.path), instance.filename
+            )
 
     def clone_for_subsetting(self, repo):
         dest = "../subset-files/" + repo
