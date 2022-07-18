@@ -84,7 +84,7 @@ class NotoBuilder(NinjaBuilder):
         self.w.comment("Build slim variable font")
         self.w.rule(
             "slim-vf",
-            "fonttools varLib.instancer -o $out $in wght=200:700",
+            "fonttools varLib.instancer -o $out $in wght=400:700 wdth=drop",
         )
 
     def get_family_name(self, source=None):
