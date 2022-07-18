@@ -246,10 +246,10 @@ class NotoBuilder(NinjaBuilder):
     def obtain_noto_ufo(self, font_name, location):
         if font_name == "Noto Sans":
             self.clone_for_subsetting("latin-greek-cyrillic")
-            path = "../subset-files/latin-greek-cyrillic/sources/NotoSans-MM.glyphs"
+            path = "../subset-files/latin-greek-cyrillic/sources/NotoSans.glyphs"
         if font_name == "Noto Serif":
             self.clone_for_subsetting("latin-greek-cyrillic")
-            path = "../subset-files/latin-greek-cyrillic/sources/NotoSerif-MM.glyphs"
+            path = "../subset-files/latin-greek-cyrillic/sources/NotoSerif.glyphs"
         if font_name == "Noto Sans Devanagari":
             self.clone_for_subsetting("devanagari")
             path = "../subset-files/devanagari/sources/NotoSansDevanagari.glyphs"
