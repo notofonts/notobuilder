@@ -313,6 +313,9 @@ jobs:
       - name: Find a DESCRIPTION.en_us.html
         run: cp documentation/{{ steps.check_tag.outputs.family}}.html DESCRIPTION.en_us.html
         continue-on-error: true
+      - name: Find an ARTICLE.en_us.html
+        run: cp documentation/{{ steps.check_tag.outputs.family}}.article.html ARTICLE.en_us.html
+        continue-on-error: true
       - name: Create release bundle
         run: cd fonts; zip -x requirements.txt -r ../${{ github.ref_name }}.zip ${{ steps.check_tag.outputs.family}}/ ../*.txt ../DESCRIPTION.en_us.html
       - name: Upload binaries to release
