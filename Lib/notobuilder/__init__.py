@@ -86,6 +86,11 @@ class NotoBuilder(NinjaBuilder):
             "slim-vf",
             "fonttools varLib.instancer -o $out $in wght=400:700 wdth=drop",
         )
+        self.w.comment("Build slim variable font for fonts without width")
+        self.w.rule(
+            "slim-vf-no-width",
+            "fonttools varLib.instancer -o $out $in wght=400:700",
+        )
 
     def get_family_name(self, source=None):
         if not source:
@@ -118,7 +123,10 @@ class NotoBuilder(NinjaBuilder):
             target = re.sub("\[.*\].ttf$", "[wght].ttf", target)
             # Slim VFs are an android thing
             if not self.googlefonts:
-                self.w.build(target, "slim-vf", file, implicit=implicit)
+                if "wdth" in file:
+                    self.w.build(target, "slim-vf", file, implicit=implicit)
+                else:
+                    self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
