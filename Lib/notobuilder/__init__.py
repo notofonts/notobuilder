@@ -255,12 +255,17 @@ class NotoBuilder(NinjaBuilder):
         if font_name == "Noto Sans":
             self.clone_for_subsetting("latin-greek-cyrillic")
             path = "../subset-files/latin-greek-cyrillic/sources/NotoSans.glyphs"
-        if font_name == "Noto Serif":
+        elif font_name == "Noto Serif":
             self.clone_for_subsetting("latin-greek-cyrillic")
             path = "../subset-files/latin-greek-cyrillic/sources/NotoSerif.glyphs"
-        if font_name == "Noto Sans Devanagari":
+        elif font_name == "Noto Sans Devanagari":
             self.clone_for_subsetting("devanagari")
             path = "../subset-files/devanagari/sources/NotoSansDevanagari.glyphs"
+        elif font_name == "Noto Serif Devanagari":
+            self.clone_for_subsetting("devanagari")
+            path = "../subset-files/devanagari/sources/NotoSerifDevanagari.glyphs"
+        else:
+            raise ValueError("Unknown subsetting font %s" % font_name)
 
         if path.endswith(".glyphs"):
             ds_path = path.replace(".glyphs", ".designspace")
