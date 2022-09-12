@@ -21,7 +21,6 @@ import ufoLib2
 from fontTools import designspaceLib
 from fontmake.font_project import FontProject
 from glyphsets import GFGlyphData
-import glyphsLib
 from strictyaml import HexInt, Map, Optional, Seq, Str, Bool
 
 from gftools.builder.ninja import NinjaBuilder
@@ -129,17 +128,19 @@ class NotoBuilder(NinjaBuilder):
                 else:
                     self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
 
-    def glyphs_to_ufo(self, source, directory=None, generate_gdef=None):
+    def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
         if directory is None:
             directory = source.resolve().parent
         output = str(Path(directory) / source.with_suffix(".designspace").name)
-        glyphsLib.build_masters(
+        self.run_fontmake(
             str(source.resolve()),
-            directory,
-            directory,
-            designspace_path=output,
-            generate_GDEF=generate_gdef,
+            {
+                "format": ["ufo"],
+                "output_dir": directory,
+                "master_dir": directory,
+                "designspace_path": output,
+            },
         )
         if self.googlefonts:
             ds = designspaceLib.DesignSpaceDocument.fromfile(output)
@@ -272,7 +273,7 @@ class NotoBuilder(NinjaBuilder):
                 path = ds_path
             else:
                 self.logger.info("Building UFO file for subset font " + font_name)
-                path = self.glyphs_to_ufo(path, generate_gdef=True)
+                path = self.glyphs_to_ufo(path)
         source_ds = designspaceLib.DesignSpaceDocument.fromfile(path)
         source_ufo = self.find_source(source_ds, location, font_name)
         if source_ufo:
