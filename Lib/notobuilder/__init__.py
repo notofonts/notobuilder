@@ -298,16 +298,13 @@ class NotoBuilder(NinjaBuilder):
             self.logger.info(f"Couldn't find a master from {font_name} for location {location}, trying instances")
             # Try instances
             for instance in source_ds.instances:
-                match = True
-                for axis, loc in location.items():
-                    if (
-                        axis in instance.location
-                        and axis in source_mappings
-                        and instance.location[axis] != source_mappings[axis](loc)
-                    ):
-                        match = False
-                if match:
-                    self.generate_subset_instances(source_ds, font_name)
+                if all(
+                    axis in instance.location
+                    and axis in source_mappings
+                    and instance.location[axis] == source_mappings[axis](loc)
+                    for axis, loc in location.items()
+                ):
+                    self.generate_subset_instances(source_ds, font_name, instance)
                     target = instance
                     break
         if target:
@@ -319,11 +316,11 @@ class NotoBuilder(NinjaBuilder):
         )
         return None
 
-    def generate_subset_instances(self, source_ds, font_name):
+    def generate_subset_instances(self, source_ds, font_name, instance):
         if source_ds in self.subset_instances:
             return
         self.logger.info(f"Generate UFO instances for {font_name}")
-        ufos = FontProject().interpolate_instance_ufos(source_ds)
+        ufos = FontProject().interpolate_instance_ufos(source_ds, include=instance.name)
         self.subset_instances[source_ds] = ufos
         for instance, ufo in zip(source_ds.instances, ufos):
             instance.path = os.path.join(
