@@ -133,7 +133,7 @@ class NotoBuilder(NinjaBuilder):
                     self.w.build(target, "slim-vf", file, implicit=implicit)
                 else:
                     self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
-                if self.config["buildUIVF"]:
+                if self.config.get("buildUIVF"):
                     ui_target = target.replace("[wght].ttf", "-UI-VF.ttf")
                     self.w.build(ui_target, "build-ui-vf", [target, self.config["original_sources"][0]])
 
