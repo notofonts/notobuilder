@@ -42,6 +42,7 @@ subsets_schema = Seq(
 _newschema = schema._validator
 _newschema[Optional("includeSubsets")] = subsets_schema
 _newschema[Optional("forceSubsets")] = Bool()
+_newschema[Optional("buildUIVF")] = Bool()
 
 
 class NotoBuilder(NinjaBuilder):
@@ -91,6 +92,11 @@ class NotoBuilder(NinjaBuilder):
             "slim-vf-no-width",
             "fonttools varLib.instancer -o $out $in wght=400:700",
         )
+        self.w.comment("Make an Android UI variable font")
+        self.w.rule(
+            "build-ui-vf",
+            "python3 -m notobuilder.builduivf -o $out $in $source",
+        )
 
     def get_family_name(self, source=None):
         if not source:
@@ -127,6 +133,10 @@ class NotoBuilder(NinjaBuilder):
                     self.w.build(target, "slim-vf", file, implicit=implicit)
                 else:
                     self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
+                if self.config["buildUIVF"]:
+                    ui_target = target.replace("[wght].ttf", "-UI-VF.ttf")
+                    self.w.build(ui_target, "build-ui-vf", [target, self.config["original_sources"][0]])
+
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)
@@ -151,6 +161,7 @@ class NotoBuilder(NinjaBuilder):
 
     def build(self):
         # First convert to Designspace/UFO
+        self.config["original_sources"] = self.config["sources"][:]
         for ix, source in enumerate(self.config["sources"]):
             if source.endswith(".glyphs"):
                 self.config["sources"][ix] = self.glyphs_to_ufo(source)
