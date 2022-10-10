@@ -147,6 +147,7 @@ class NotoBuilder(NinjaBuilder):
             str(source.resolve()),
             {
                 "format": ["ufo"],
+                "output": ["ufo"],
                 "output_dir": directory,
                 "master_dir": directory,
                 "designspace_path": output,
