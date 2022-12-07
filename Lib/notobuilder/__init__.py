@@ -164,7 +164,7 @@ class NotoBuilder(NinjaBuilder):
         # First convert to Designspace/UFO
         self.config["original_sources"] = self.config["sources"][:]
         for ix, source in enumerate(self.config["sources"]):
-            if source.endswith(".glyphs"):
+            if source.endswith(".glyphs") or source.endswith(".glyphspackage"):
                 self.config["sources"][ix] = self.glyphs_to_ufo(source)
 
         # Turn off variable font support for things which don't vary
