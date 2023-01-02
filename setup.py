@@ -13,6 +13,6 @@ setup(
         "ttfautohint-py",
         "ufo2ft>=2.27.0",
         "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools@noto",
-        "fontbakery>=0.8",
+        "fontbakery>=0.8.11a8",
     ],
 )
