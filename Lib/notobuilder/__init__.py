@@ -42,6 +42,7 @@ subsets_schema = Seq(
 _newschema = schema._validator
 _newschema[Optional("includeSubsets")] = subsets_schema
 _newschema[Optional("forceSubsets")] = Bool()
+_newschema[Optional("layoutClosure")] = Bool()
 _newschema[Optional("buildUIVF")] = Bool()
 
 
@@ -254,11 +255,15 @@ class NotoBuilder(NinjaBuilder):
         existing_handling = "skip"
         if self.config.get("forceSubsets"):
             existing_handling = "replace"
+        layout_handling = "subset"
+        if self.config.get("layoutClosure"):
+            layout_handling = "closure"
         merge_ufos(
             target_ufo,
             source_ufo,
             codepoints=unicodes,
             existing_handling=existing_handling,
+            layout_handling=layout_handling,
         )
         target_ufo.save(ds_source.path, overwrite=True)
         return True
