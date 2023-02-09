@@ -38,7 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up latest harfbuzz
-      uses: notofonts/notobuilder/.github/workflows/harfbuzz.yaml@main
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -63,7 +63,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up latest harfbuzz
-      uses: notofonts/notobuilder/.github/workflows/harfbuzz.yaml@main
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -90,7 +90,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up latest harfbuzz
-      uses: notofonts/notobuilder/.github/workflows/harfbuzz.yaml@main
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
