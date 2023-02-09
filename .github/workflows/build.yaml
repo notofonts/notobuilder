@@ -60,6 +60,11 @@ jobs:
     needs: first-run
     steps:
     - uses: actions/checkout@v2
+    - name: Set up latest harfbuzz
+      run:
+        sudo add-apt-repository ppa:savoury1/fonts
+        sudo apt update
+        sudo apt-get install libharfbuzz-bin libharfbuzz0b
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
