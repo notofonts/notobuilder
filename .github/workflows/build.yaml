@@ -21,39 +21,39 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-  #   - name: Do first-run script if necessary
-  #     run: make .init.stamp
-  #     if: github.repository != 'notofonts/noto-project-template'
-  #   - uses: stefanzweifel/git-auto-commit-action@v4
-  #     name: First-run setup
-  #     if: github.repository != 'notofonts/noto-project-template'
-  #     with:
-  #       file_pattern: .init.stamp README.md requirements.txt OFL.txt
-  #       commit_message: "Personalize for this repo"
+    - name: Do first-run script if necessary
+      run: make .init.stamp
+      if: github.repository != 'notofonts/noto-project-template'
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      name: First-run setup
+      if: github.repository != 'notofonts/noto-project-template'
+      with:
+        file_pattern: .init.stamp README.md requirements.txt OFL.txt
+        commit_message: "Personalize for this repo"
 
-  # build-ttf:
-  #   runs-on: ubuntu-latest
-  #   name: Build main TTFs
-  #   needs: first-run
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Set up latest harfbuzz
-  #     uses: notofonts/install-harfbuzz-action@main
-  #   - name: Set up Python
-  #     uses: actions/setup-python@v4
-  #     with:
-  #       python-version: '3.x'
-  #   - uses: actions/cache@v2
-  #     with:
-  #       path: ./subset-files
-  #       key: subsets
-  #   - name: Build fonts
-  #     run: make build
-  #   - name: Archive artifacts
-  #     uses: actions/upload-artifact@v2
-  #     with:
-  #       name: fontbuild-ttf
-  #       path: fonts
+  build-ttf:
+    runs-on: ubuntu-latest
+    name: Build main TTFs
+    needs: first-run
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up latest harfbuzz
+      uses: notofonts/install-harfbuzz-action@main
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - uses: actions/cache@v2
+      with:
+        path: ./subset-files
+        key: subsets
+    - name: Build fonts
+      run: make build
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: fontbuild-ttf
+        path: fonts
 
   # build-otf:
   #   runs-on: ubuntu-latest
