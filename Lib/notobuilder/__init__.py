@@ -143,23 +143,20 @@ class NotoBuilder(NinjaBuilder):
                     self.w.build(target, "slim-vf", file, implicit=implicit)
                 else:
                     self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
-
-                # This is a good idea but installing a decent hb-subset on Github
-                # actions runners seems currently impossible
-                # self.temporaries.append(target + ".subsetstamp")
-                # self.w.build(target + ".subsetstamp", "subset-stamp", target)
+                self.temporaries.append(target + ".subsetstamp")
+                self.w.build(target + ".subsetstamp", "subset-stamp", target)
 
                 if self.config.get("buildUIVF"):
                     ui_target = target.replace("[wght].ttf", "-UI-VF.ttf")
                     self.w.build(ui_target, "build-ui-vf", [target, self.config["original_sources"][0]], implicit=target + ".subsetstamp")
         # For android we also want to produce a hb-subset'ed OTF
         # if there is only a single master
-        # elif self.config["buildOTF"] and "unhinted" in file and len(self.designspaces[0][1].sources) == 1:
-        #     slim_otf_dir = self.config["otDir"].replace(
-        #         "otf", "slim-otf"
-        #     )
-        #     target = os.path.join(slim_otf_dir, os.path.basename(file))
-        #     self.w.build(target, "subset", file)
+        elif self.config["buildOTF"] and "unhinted" in file and len(self.designspaces[0][1].sources) == 1:
+            slim_otf_dir = self.config["otDir"].replace(
+                "otf", "slim-otf"
+            )
+            target = os.path.join(slim_otf_dir, os.path.basename(file))
+            self.w.build(target, "subset", file)
 
     def glyphs_to_ufo(self, source, directory=None):
         source = Path(source)

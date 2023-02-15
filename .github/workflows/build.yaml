@@ -35,8 +35,8 @@ jobs:
     needs: first-run
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up latest harfbuzz
-    #   uses: notofonts/install-harfbuzz-action@main
+    - name: Set up latest harfbuzz
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -60,8 +60,8 @@ jobs:
     needs: first-run
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up latest harfbuzz
-    #   uses: notofonts/install-harfbuzz-action@main
+    - name: Set up latest harfbuzz
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -87,8 +87,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # - name: Set up latest harfbuzz
-    #   uses: notofonts/install-harfbuzz-action@main
+    - name: Set up latest harfbuzz
+      uses: notofonts/install-harfbuzz-action@main
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
