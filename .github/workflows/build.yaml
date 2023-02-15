@@ -47,6 +47,8 @@ jobs:
       with:
         path: ./subset-files
         key: subsets
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
     - name: Build fonts
       run: make build
     - name: Archive artifacts
