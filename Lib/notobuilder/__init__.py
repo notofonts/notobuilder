@@ -105,7 +105,7 @@ class NotoBuilder(NinjaBuilder):
         )
         self.w.rule(
             "subset-stamp",
-            "hb-subset --output-file=$in --unicodes=* --name-IDs=* --layout-features=* $in && touch $out",
+            "hb-subset --output-file=$in.subset --unicodes=* --name-IDs=* --layout-features=* $in && mv $in.subset $in && touch $out",
         )
 
     def get_family_name(self, source=None):
