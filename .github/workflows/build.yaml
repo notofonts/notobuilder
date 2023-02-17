@@ -4,9 +4,11 @@ on:
   workflow_call:
     secrets:
       USER_GITHUB_TOKEN:
-        required: true
+        description: "A github token representing the Google Fonts onboarder's account"
+        required: false
       SSH_KEY:
-        required: true
+        description: "An SSH key for the Google Fonts onboarder"
+        required: false
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -340,7 +342,7 @@ jobs:
     environment: googlefonts
     name: Submit PR to Google Fonts
     needs: create_release
-    if: needs.create_release.outputs.url
+    if: needs.create_release.outputs.url && secrets.SSH_KEY
     steps:
       - name: Check SSH_KEY is set
         run: |
