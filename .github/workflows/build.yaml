@@ -4,7 +4,9 @@ on:
   workflow_call:
     secrets:
       USER_GITHUB_TOKEN:
+        required: true
       SSH_KEY:
+        required: true
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
