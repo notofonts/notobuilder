@@ -303,8 +303,8 @@ class NotoBuilder(NinjaBuilder):
         else:
             raise ValueError("Unknown subsetting font %s" % font_name)
 
-        if path.endswith(".glyphs"):
-            ds_path = path.replace(".glyphs", ".designspace")
+        if path.endswith((".glyphs", ".glyphspackage")):
+            ds_path = re.sub(r".glyphs(package)?", ".designspace", path)
             if os.path.exists(ds_path):
                 path = ds_path
             else:
