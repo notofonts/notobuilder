@@ -296,15 +296,15 @@ class NotoBuilder(NinjaBuilder):
             path = "../subset-files/latin-greek-cyrillic/sources/NotoSerif.glyphs"
         elif font_name == "Noto Sans Devanagari":
             self.clone_for_subsetting("devanagari")
-            path = "../subset-files/devanagari/sources/NotoSansDevanagari.glyphs"
+            path = "../subset-files/devanagari/sources/NotoSansDevanagari.glyphspackage"
         elif font_name == "Noto Serif Devanagari":
             self.clone_for_subsetting("devanagari")
-            path = "../subset-files/devanagari/sources/NotoSerifDevanagari.glyphs"
+            path = "../subset-files/devanagari/sources/NotoSerifDevanagari.glyphspackage"
         else:
             raise ValueError("Unknown subsetting font %s" % font_name)
 
-        if path.endswith(".glyphs"):
-            ds_path = path.replace(".glyphs", ".designspace")
+        if path.endswith((".glyphs", ".glyphspackage")):
+            ds_path = re.sub(r".glyphs(package)?", ".designspace", path)
             if os.path.exists(ds_path):
                 path = ds_path
             else:
