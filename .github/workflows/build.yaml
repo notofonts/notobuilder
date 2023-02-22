@@ -342,7 +342,6 @@ jobs:
     environment: googlefonts
     name: Submit PR to Google Fonts
     needs: create_release
-    if: needs.create_release.outputs.url && secrets.SSH_KEY
     steps:
       - name: Check SSH_KEY is set
         run: |
