@@ -14,5 +14,6 @@ setup(
         "ufo2ft>=2.27.0",
         "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools@noto",
         "fontbakery>=0.8.11a8",
+        "diffenator2 @ git+https://github.com/googlefonts/diffenator2",
     ],
 )

@@ -2,7 +2,7 @@ import os
 import glob
 from gftools.actions.getlatestversion import get_latest_release
 from gftools.utils import download_files_from_archive
-from gftools.qa import FontQA
+from diffenator2 import ninja_diff
 from fontTools.ttLib import TTFont
 
 if not "GITHUB_TOKEN" in os.environ:
@@ -11,10 +11,16 @@ os.environ["GH_TOKEN"] = os.environ["GITHUB_TOKEN"]
 
 outdir = os.path.join("out", "qa")
 os.makedirs(outdir, exist_ok=True)
-strings = []
-for strings_file in glob.glob("qa/*.txt"):
-    with open(strings_file) as file:
-        strings.extend([line.rstrip() for line in file])
+all_strings = None
+qa_strings = glob.glob("qa/*.txt")
+
+if qa_strings:
+    all_strings = os.path.join(outdir, "all_strings.txt")
+    with open(all_strings, "w") as out_file:
+        for strings_file in qa_strings:
+            with open(strings_file) as in_file:
+                for line in in_file:
+                    out_file.write(line)
 
 for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     previous_version, previous_url = get_latest_release(family)
@@ -59,5 +65,5 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     if not fonts_before:
         print(f"No previous fonts to compare for {family}!")
         continue
-    qa = FontQA(ttfonts_now, ttfonts_before, os.path.join(outdir, family))
-    qa.diffenator2(strings=strings)
+    ninja_diff([fonts_before], [fonts_now], out=os.path.join(outdir, family),
+        user_wordlist=all_strings)
