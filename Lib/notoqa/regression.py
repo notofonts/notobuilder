@@ -65,5 +65,5 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     if not fonts_before:
         print(f"No previous fonts to compare for {family}!")
         continue
-    ninja_diff([fonts_before], [fonts_now], out=os.path.join(outdir, family),
+    ninja_diff(fonts_before, fonts_now, out=os.path.join(outdir, family),
         user_wordlist=all_strings)
