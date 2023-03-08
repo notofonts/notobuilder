@@ -145,11 +145,15 @@ class NotoBuilder(NinjaBuilder):
                     self.w.build(target, "slim-vf-no-width", file, implicit=implicit)
                 if self.config.get("buildUIVF"):
                     ui_target = target.replace("[wght].ttf", "-UI-VF.ttf")
-                    self.w.build(ui_target, "build-ui-vf", [target, self.config["original_sources"][0]], implicit=target + ".subsetstamp")
+                    self.w.build(ui_target, "build-ui-vf", [target, self.config["original_sources"][0]])
                     self.temporaries.append(ui_target + ".subsetstamp")
                     self.w.build(ui_target + ".subsetstamp", "subset-stamp", ui_target)
-                self.temporaries.append(target + ".subsetstamp")
-                self.w.build(target + ".subsetstamp", "subset-stamp", target)
+                    # Ensure we finish the UI target before subsetting full build
+                    self.temporaries.append(target + ".subsetstamp")
+                    self.w.build(target + ".subsetstamp", "subset-stamp", target, implicit=ui_target)
+                else:
+                    self.temporaries.append(target + ".subsetstamp")
+                    self.w.build(target + ".subsetstamp", "subset-stamp", target)
 
         # For android we also want to produce a hb-subset'ed OTF
         # if there is only a single master
