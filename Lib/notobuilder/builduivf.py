@@ -51,6 +51,7 @@ def grovel_substitutions(font, lookup, glyphmap):
                     ig.LigGlyph = gmap(ig.LigGlyph)
                     ig.Component = [gmap(c) for c in ig.Component]
                 newligatures[gmap(outglyph)] = inglyphs
+            st.ligatures = newligatures
         elif lookup.LookupType == 5:
             if st.Format == 1:
                 do_coverage(st.Coverage)
