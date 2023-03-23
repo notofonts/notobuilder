@@ -41,13 +41,10 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
 
     fonts_before = [f for f in fonts_before if f.endswith(".ttf") and "unhinted" in f]
 
-    # XXX This is a lovely idea but currently comparing variables against each
-    # other doesn't work.
-
-    # if variables_now and variables_before:
-    #     # Save time, just compare the variables
-    #     fonts_now = variables_now
-    #     fonts_before = variables_before
+    if variables_now and variables_before:
+        # Save time, just compare the variables
+        fonts_now = variables_now
+        fonts_before = variables_before
 
     ttfonts_before = [TTFont(f) for f in fonts_before]
     ttfonts_now = [TTFont(f) for f in fonts_now]
