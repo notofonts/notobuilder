@@ -2,8 +2,7 @@ import os
 import glob
 from gftools.actions.getlatestversion import get_latest_release
 from gftools.utils import download_files_from_archive
-from diffenator2 import ninja_diff
-from fontTools.ttLib import TTFont
+from diffenator2 import ninja_diff, DFont
 
 if not "GITHUB_TOKEN" in os.environ:
     raise ValueError("GITHUB_TOKEN was not passed to the notoqa environment")
@@ -46,8 +45,8 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
         fonts_now = variables_now
         fonts_before = variables_before
 
-    ttfonts_before = [TTFont(f) for f in fonts_before]
-    ttfonts_now = [TTFont(f) for f in fonts_now]
+    dfonts_before = [DFont(f) for f in fonts_before]
+    dfonts_now = [DFont(f) for f in fonts_now]
     print("Fonts before: ")
     for s in fonts_before:
         print(" * "+s)
@@ -62,5 +61,5 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     if not fonts_before:
         print(f"No previous fonts to compare for {family}!")
         continue
-    ninja_diff(ttfonts_before, ttfonts_now, out=os.path.join(outdir, family),
+    ninja_diff(dfonts_before, dfonts_now, out=os.path.join(outdir, family),
         user_wordlist=all_strings)
