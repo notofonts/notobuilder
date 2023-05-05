@@ -77,11 +77,11 @@ class NotoBuilder(NinjaBuilder):
         self.w.comment("Run ttfautohint if we can")
         self.w.rule(
             "autohint-noto",
-            "gftools-autohint.py --fail-ok --auto-script --discount-latin -o $out $in",
+            "gftools-autohint --fail-ok --auto-script --discount-latin -o $out $in",
         )
         self.w.rule(
             "autohint-noto-stamp",
-            "gftools-autohint.py --fail-ok --auto-script --discount-latin -o $in $in && touch $out",
+            "gftools-autohint --fail-ok --auto-script --discount-latin -o $in $in && touch $out",
         )
         self.w.comment("Build slim variable font")
         self.w.rule(
@@ -116,7 +116,7 @@ class NotoBuilder(NinjaBuilder):
         fname = re.sub("-?MM$", "", fname)
         return fname
 
-    def post_process_ttf(self, filename):
+    def post_process_static_ttf(self, filename):
         if "full" in self.config["ttDir"] or self.googlefonts:
             self.w.build(filename + ".autohintstamp", "autohint-noto-stamp", filename)
             self.temporaries.append(filename + ".autohintstamp")
