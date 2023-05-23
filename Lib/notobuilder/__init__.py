@@ -27,7 +27,7 @@ from gftools.builder.ninja import NinjaBuilder
 from gftools.util.styles import STYLE_NAMES
 from gftools.builder.autohint import autohint
 from gftools.builder.schema import schema
-from gftools.ufomerge import merge_ufos
+from ufomerge import merge_ufos
 
 # Add our keys to schema
 subsets_schema = Seq(
