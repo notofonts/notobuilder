@@ -45,6 +45,14 @@ _newschema[Optional("forceSubsets")] = Bool()
 _newschema[Optional("layoutClosure")] = Bool()
 _newschema[Optional("buildUIVF")] = Bool()
 
+SUBSET_SOURCES = {
+    "Noto Sans": ("latin-greek-cyrillic", "NotoSans.glyphspackage"),
+    "Noto Serif": ("latin-greek-cyrillic", "NotoSerif.glyphspackage"),
+    "Noto Sans Devanagari": ("devanagari", "NotoSansDevanagari.glyphspackage"),
+    "Noto Serif Devanagari": ("devanagari", "NotoSerifDevanagari.glyphspackage"),
+    "Noto Sans Linear B": ("linear-b", "NotoSansLinearB.designspace")
+}
+
 
 class NotoBuilder(NinjaBuilder):
     schema = Map(_newschema)
@@ -294,21 +302,12 @@ class NotoBuilder(NinjaBuilder):
         return True
 
     def obtain_noto_ufo(self, font_name, location):
-        if font_name == "Noto Sans":
-            self.clone_for_subsetting("latin-greek-cyrillic")
-            path = "../subset-files/latin-greek-cyrillic/sources/NotoSans.glyphspackage"
-        elif font_name == "Noto Serif":
-            self.clone_for_subsetting("latin-greek-cyrillic")
-            path = "../subset-files/latin-greek-cyrillic/sources/NotoSerif.glyphspackage"
-        elif font_name == "Noto Sans Devanagari":
-            self.clone_for_subsetting("devanagari")
-            path = "../subset-files/devanagari/sources/NotoSansDevanagari.glyphspackage"
-        elif font_name == "Noto Serif Devanagari":
-            self.clone_for_subsetting("devanagari")
-            path = "../subset-files/devanagari/sources/NotoSerifDevanagari.glyphspackage"
-        else:
+        if font_name not in SUBSET_SOURCES:
             raise ValueError("Unknown subsetting font %s" % font_name)
+        repo, path = SUBSET_SOURCES[font_name]
+        path = f"../subset-files/{repo}/sources/{path}"
 
+        self.clone_for_subsetting(repo)
         if path.endswith((".glyphs", ".glyphspackage")):
             ds_path = re.sub(r".glyphs(package)?", ".designspace", path)
             if os.path.exists(ds_path):
