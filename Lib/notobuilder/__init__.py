@@ -244,7 +244,7 @@ class NotoBuilder(NinjaBuilder):
 
                 master.path = newpath
 
-                for subset in self.config["includeSubsets"]:
+                for subset in self.prepare_minimal_subsets(self.config["includeSubsets"]):
                     added_subsets |= self.add_subset(ds, master, subset)
             if not added_subsets:
                 raise ValueError("Could not match *any* subsets for this font")
@@ -265,19 +265,31 @@ class NotoBuilder(NinjaBuilder):
         super().build()
         # Temporaries should get cleaned here.
 
+    def prepare_minimal_subsets(self, subsets):
+        # Turn a list of subsets into a minimal set of merges
+        unicodes_by_donor = defaultdict(set)
+        for subset in subsets:
+            if "name" in subset:
+                # Resolve to glyphset
+                unicodes = [
+                    x["unicode"]
+                    for x in GFGlyphData.glyphs_in_glyphsets([subset["name"]])
+                    if x["unicode"]
+                ]
+            else:
+                unicodes = []
+                for r in subset["ranges"]:
+                    for cp in range(r["start"], r["end"] + 1):
+                        unicodes.append(cp)
+            unicodes_by_donor[subset["from"]] |= set(unicodes)
+        return [
+            {"from": key,
+             "unicodes": list(value)
+            }
+             for key, value in unicodes_by_donor.items()
+        ]
+
     def add_subset(self, ds, ds_source, subset):
-        if "name" in subset:
-            # Resolve to glyphset
-            unicodes = [
-                x["unicode"]
-                for x in GFGlyphData.glyphs_in_glyphsets([subset["name"]])
-                if x["unicode"]
-            ]
-        else:
-            unicodes = []
-            for r in subset["ranges"]:
-                for cp in range(r["start"], r["end"] + 1):
-                    unicodes.append(cp)
         location = dict(ds_source.location)
         for axis in ds.axes:
             location[axis.name] = axis.map_backward(location[axis.name])
@@ -294,7 +306,7 @@ class NotoBuilder(NinjaBuilder):
         merge_ufos(
             target_ufo,
             source_ufo,
-            codepoints=unicodes,
+            codepoints=subset["unicodes"],
             existing_handling=existing_handling,
             layout_handling=layout_handling,
         )
