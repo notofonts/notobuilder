@@ -8,7 +8,7 @@ setup(
     packages=["notobuilder", "notoqa"],
     install_requires=[
         # This specific version (or newer) required to make ufomerge work
-        "fonttools @ git+https://github.com/fonttools/fonttools@65bc610",
+        "fonttools[ufo,unicode] @ git+https://github.com/fonttools/fonttools@65bc610",
         "ufomerge>=1.0.0",
         "fontmake>=3.3",
         "glyphsLib>=6.0.7",
