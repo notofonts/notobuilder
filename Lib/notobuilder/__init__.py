@@ -8,6 +8,7 @@ Example:
 
     python3 -m notobuilder src/config.yaml
 """
+from collections import defaultdict
 import logging
 import os
 import re
