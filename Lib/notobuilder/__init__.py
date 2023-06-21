@@ -34,13 +34,13 @@ subsets_schema = Seq(
             "from": Str(),
             Optional("name"): Str(),
             Optional("ranges"): Seq(Map({"start": HexInt(), "end": HexInt()})),
+            Optional("layoutHandling"): Str(),
+            Optional("force"): Str(),
         }
     )
 )
 _newschema = schema._validator
 _newschema[Optional("includeSubsets")] = subsets_schema
-_newschema[Optional("forceSubsets")] = Bool()
-_newschema[Optional("layoutClosure")] = Bool()
 _newschema[Optional("buildUIVF")] = Bool()
 
 SUBSET_SOURCES = {
@@ -279,13 +279,19 @@ class NotoBuilder(NinjaBuilder):
                 for r in subset["ranges"]:
                     for cp in range(r["start"], r["end"] + 1):
                         unicodes.append(cp)
-            unicodes_by_donor[subset["from"]] |= set(unicodes)
-        return [
-            {"from": key,
-             "unicodes": list(value)
-            }
-             for key, value in unicodes_by_donor.items()
-        ]
+            key = (subset["from"], subset.get("layoutHandling"), subset.get("force"))
+            unicodes_by_donor[key] |= set(unicodes)
+        newsubsets = []
+        for (donor, layouthandling, force), unicodes in unicodes_by_donor.items():
+            newsubsets.append({
+                 "from": donor,
+                 "unicodes": list(unicodes)
+            })
+            if layouthandling:
+                newsubsets[-1]["layoutHandling"] = layouthandling
+            if force:
+                newsubsets[-1]["force"] = force
+        return newsubsets
 
     def add_subset(self, ds, ds_source, subset):
         location = dict(ds_source.location)
@@ -296,11 +302,9 @@ class NotoBuilder(NinjaBuilder):
             return False
         target_ufo = ufoLib2.Font.open(ds_source.path)
         existing_handling = "skip"
-        if self.config.get("forceSubsets"):
+        if subset.get("force"):
             existing_handling = "replace"
-        layout_handling = "subset"
-        if self.config.get("layoutClosure"):
-            layout_handling = "closure"
+        layout_handling = subset.get("layoutHandling", "subset")
         merge_ufos(
             target_ufo,
             source_ufo,
