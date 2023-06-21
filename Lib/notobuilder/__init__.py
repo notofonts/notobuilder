@@ -12,8 +12,6 @@ from collections import defaultdict
 import logging
 import os
 import re
-import sys
-import shutil
 import tempfile
 from pathlib import Path
 
@@ -26,7 +24,6 @@ from strictyaml import HexInt, Map, Optional, Seq, Str, Bool
 
 from gftools.builder.ninja import NinjaBuilder
 from gftools.util.styles import STYLE_NAMES
-from gftools.builder.autohint import autohint
 from gftools.builder.schema import schema
 from ufomerge import merge_ufos
 
