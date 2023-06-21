@@ -308,6 +308,12 @@ jobs:
       - name: Check for appropriate tag
         id: check_tag
         run: . venv/bin/activate; python3 scripts/check-tag.py ${{ github.ref_name }}
+      - name: Set release body from tag
+        run:
+          echo "release_body=<<EOF" >> "$GITHUB_OUTPUT"
+          git tag -l --format='%(contents)' ${{ github.ref_name }}  >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+        name: release_body
       - name: Create release
         id: release
         uses: actions/create-release@latest
@@ -316,6 +322,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           release_name: ${{ github.ref_name }}
+          body: ${{ steps.release_body.outputs.release_body }}
       - name: Tell user about release
         run: echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
       - name: Find a DESCRIPTION.en_us.html
@@ -335,7 +342,7 @@ jobs:
           asset_name: ${{ github.ref_name }}.zip
           tag: ${{ github.ref_name }}
           overwrite: true
-          body: "Production ready fonts"
+          body: ${{ steps.release_body.outputs.release_body }}
 
   google_fonts_pr:
     runs-on: ubuntu-latest
