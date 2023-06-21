@@ -313,7 +313,7 @@ jobs:
           echo "release_body=<<EOF" >> "$GITHUB_OUTPUT"
           git tag -l --format='%(contents)' ${{ github.ref_name }}  >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-        name: release_body
+        id: release_body
       - name: Create release
         id: release
         uses: actions/create-release@latest
