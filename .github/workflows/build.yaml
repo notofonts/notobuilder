@@ -321,7 +321,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           release_name: ${{ github.ref_name }}
-          body: ${{ steps.release_body.outputs.release_body }}
+          body: ${{ env.RELEASE_NOTES }}
       - name: Tell user about release
         run: echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
       - name: Find a DESCRIPTION.en_us.html
