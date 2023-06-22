@@ -310,10 +310,9 @@ jobs:
         run: . venv/bin/activate; python3 scripts/check-tag.py ${{ github.ref_name }}
       - name: Set release body from tag
         run: |
-          echo 'release_body<<EOF' >> "$GITHUB_OUTPUT"
-          git tag -l --format='%(contents)' ${{ github.ref_name }}  >> "$GITHUB_OUTPUT"
-          echo 'EOF' >> "$GITHUB_OUTPUT"
-        id: release_body
+          echo 'RELEASE_NOTES<<EOF' >> "$GITHUB_ENV"
+          git tag -l --format='%(contents)' ${{ github.ref_name }}  >> "$GITHUB_ENV"
+          echo 'EOF' >> "$GITHUB_ENV"
       - name: Create release
         id: release
         uses: actions/create-release@latest
@@ -342,8 +341,7 @@ jobs:
           asset_name: ${{ github.ref_name }}.zip
           tag: ${{ github.ref_name }}
           overwrite: true
-          body: ${{ steps.release_body.outputs.release_body }}
-
+          body: ${{ env.RELEASE_NOTES }}
   google_fonts_pr:
     runs-on: ubuntu-latest
     environment: googlefonts
