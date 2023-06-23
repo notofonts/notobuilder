@@ -323,7 +323,10 @@ jobs:
           release_name: ${{ github.ref_name }}
           body: ${{ env.RELEASE_NOTES }}
       - name: Tell user about release
-        run: echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
+        run: |
+          echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
+          git tag -l --format='%(contents)' ${{ github.ref_name }}
+          echo "$RELEASE_NOTES"
       - name: Find a DESCRIPTION.en_us.html
         run: cp documentation/${{ steps.check_tag.outputs.family}}.html fonts/DESCRIPTION.en_us.html
         continue-on-error: true
