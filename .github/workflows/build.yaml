@@ -311,7 +311,7 @@ jobs:
       - name: Set release body from tag
         run: |
           echo 'RELEASE_NOTES<<EOF' >> "$GITHUB_ENV"
-          git tag -l --format='%(contents)' ${{ github.ref_name }}  >> "$GITHUB_ENV"
+          git show -s --format=%B ${{ github.ref_name }} | tail -n +4  >> "$GITHUB_ENV"
           echo 'EOF' >> "$GITHUB_ENV"
       - name: Create release
         id: release
@@ -325,7 +325,7 @@ jobs:
       - name: Tell user about release
         run: |
           echo '::warning file=sources/config.yaml,title=A new release ${{ github.ref_name }} has been created'
-          git tag -l --format='%(contents)' ${{ github.ref_name }}
+          git show -s --format=%B ${{ github.ref_name }} | tail -n +4
           echo "$RELEASE_NOTES"
       - name: Find a DESCRIPTION.en_us.html
         run: cp documentation/${{ steps.check_tag.outputs.family}}.html fonts/DESCRIPTION.en_us.html
