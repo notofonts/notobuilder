@@ -124,7 +124,7 @@ jobs:
           name: fontbuild-googlefonts
           path: fonts
       - name: Install xml2/xslt dev
-        run: apt-get install libxml2-dev libxslt1-dev
+        run: sudo apt-get install libxml2-dev libxslt1-dev
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
