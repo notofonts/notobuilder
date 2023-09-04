@@ -22,7 +22,7 @@ from fontmake.font_project import FontProject
 from glyphsets import GFGlyphData
 from strictyaml import HexInt, Map, Optional, Seq, Str, Bool
 
-from gftools.builder.ninja import NinjaBuilder
+from gftools.builder._ninja import NinjaBuilder
 from gftools.util.styles import STYLE_NAMES
 from gftools.builder.schema import schema
 from ufomerge import merge_ufos

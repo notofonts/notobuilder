@@ -14,8 +14,8 @@ setup(
         "glyphsLib>=6.0.7",
         "ttfautohint-py",
         "ufo2ft>=2.27.0",
-        "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools@noto",
+        "gftools[qa,ninja] @ git+https://github.com/googlefonts/gftools",
         "fontbakery>=0.8.11a8",
-        "diffenator2 @ git+https://github.com/googlefonts/diffenator2",
+        "diffenator2>=0.2.12",
     ],
 )
