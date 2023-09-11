@@ -9,7 +9,7 @@ setup(
     install_requires=[
         # This specific version (or newer) required to make ufomerge work
         "fonttools>=4.40.0",
-        "ufomerge>=1.0.0",
+        "ufomerge>=1.4.0",
         "fontmake>=3.3",
         "glyphsLib>=6.0.7",
         "ttfautohint-py",
