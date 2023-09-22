@@ -15,7 +15,7 @@ setup(
         "ttfautohint-py",
         "ufo2ft>=2.27.0",
         "gftools[qa] @ git+https://github.com/googlefonts/gftools@builder2",
-        "fontbakery>=0.8.11a8",
+        "fontbakery[googlefonts]>=0.9.0",
         "diffenator2>=0.2.12",
     ],
 )
