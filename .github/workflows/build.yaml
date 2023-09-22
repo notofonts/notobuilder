@@ -33,7 +33,7 @@ jobs:
           file_pattern: .init.stamp README.md requirements.txt OFL.txt
           commit_message: "Personalize for this repo"
 
-  build-ttf:
+  build-all:
     runs-on: ubuntu-latest
     name: Build main TTFs
     needs: first-run
@@ -54,74 +54,19 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: fontbuild-ttf
-          path: fonts
-
-  build-otf:
-    runs-on: ubuntu-latest
-    name: Build OTFs (release only)
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: first-run
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up latest harfbuzz
-        uses: notofonts/install-harfbuzz-action@main
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-      - uses: actions/cache@v2
-        with:
-          path: ./subset-files
-          key: subsets
-      - name: Install dependencies
-        run: make venv
-      - name: Build fonts
-        run: |
-          (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --otfs $config || ! break; done)  && touch build.stamp
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: fontbuild-otf
-          path: fonts
-
-  build-googlefonts:
-    name: Build Google Fonts instances
-    needs: first-run
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up latest harfbuzz
-        uses: notofonts/install-harfbuzz-action@main
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-      - uses: actions/cache@v2
-        with:
-          path: ./subset-files
-          key: subsets
-      - name: Install dependencies
-        run: make venv
-      - name: Build fonts
-        run: |
-          (for config in sources/config*.yaml; do . venv/bin/activate; python3 -m notobuilder --googlefonts $config || ! break; done)  && touch build.stamp
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: fontbuild-googlefonts
+          name: fontbuild
           path: fonts
 
   fontbakery-googlefonts:
     name: Check with Fontbakery
     runs-on: ubuntu-latest
-    needs: build-googlefonts
+    needs: build-all
     steps:
       - uses: actions/checkout@v2
       - name: Download font build zip
         uses: actions/download-artifact@v3
         with:
-          name: fontbuild-googlefonts
+          name: fontbuild
           path: fonts
       - name: Install xml2/xslt dev
         run: sudo apt-get install libxml2-dev libxslt1-dev
@@ -150,13 +95,13 @@ jobs:
   proof:
     name: Create proof documents
     runs-on: ubuntu-latest
-    needs: build-ttf
+    needs: build-all
     steps:
       - uses: actions/checkout@v2
       - name: Download font build zip
         uses: actions/download-artifact@v3
         with:
-          name: fontbuild-ttf
+          name: fontbuild
           path: fonts
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -176,13 +121,13 @@ jobs:
   regression:
     name: Regression test
     runs-on: ubuntu-latest
-    needs: build-ttf
+    needs: build-all
     steps:
       - uses: actions/checkout@v2
       - name: Download font build zip
         uses: actions/download-artifact@v3
         with:
-          name: fontbuild-ttf
+          name: fontbuild
           path: fonts
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -213,19 +158,8 @@ jobs:
       - name: Download font zip
         uses: actions/download-artifact@v3
         with:
-          name: fontbuild-ttf
+          name: fontbuild
           path: fonts
-      - name: Download font zip
-        uses: actions/download-artifact@v3
-        with:
-          name: fontbuild-googlefonts
-          path: fonts
-      - name: Download font zip
-        uses: actions/download-artifact@v3
-        with:
-          name: fontbuild-otf
-          path: fonts
-        continue-on-error: true
       - name: Download fontbakery-googlefonts zip
         uses: actions/download-artifact@v3
         with:
@@ -273,9 +207,7 @@ jobs:
   create_release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     needs:
-      - build-ttf
-      - build-otf
-      - build-googlefonts
+      - build-all
     runs-on: ubuntu-latest
     name: Create release
     outputs:
@@ -293,18 +225,7 @@ jobs:
       - name: Download font zip
         uses: actions/download-artifact@v3
         with:
-          name: fontbuild-ttf
-          path: fonts
-      - name: Download font zip
-        uses: actions/download-artifact@v3
-        with:
-          name: fontbuild-otf
-          path: fonts
-      - name: Download font zip
-        uses: actions/download-artifact@v3
-        with:
-          name: fontbuild-googlefonts
-          path: fonts
+          name: fontbuild
       - name: Check for appropriate tag
         id: check_tag
         run: . venv/bin/activate; python3 scripts/check-tag.py ${{ github.ref_name }}
