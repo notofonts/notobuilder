@@ -1,25 +1,39 @@
-from . import NotoBuilder
+import subprocess
+from os import chdir
+from pathlib import Path
 
-import argparse
-import logging
+import yaml
+from gftools.builder import GFBuilder
 
-parser = argparse.ArgumentParser(description="Build a Noto font")
-parser.add_argument("config", metavar="YAML", help="config files")
-parser.add_argument("--debug", action="store_true", help="debug subsetter")
-parser.add_argument("--verbose", "-v", action="store_true", help="verbose logging")
-parser.add_argument("--otfs", action="store_true", help="build OTFs")
-parser.add_argument("--googlefonts", action="store_true", help="build for Google Fonts")
 
-args = parser.parse_args()
+# These days I'm just gftools-builder in a funny hat.
+def main(args=None):
+    import argparse
 
-if args.verbose:
-    logging.basicConfig(level=logging.INFO)
-builder = NotoBuilder(
-    args.config, otfs=args.otfs, googlefonts=args.googlefonts, debug=args.debug
-)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--graph", help="Draw a graph of the build process", action="store_true")
+    parser.add_argument("--no-ninja", help="Do not run ninja", action="store_true")
+    parser.add_argument("--generate", help="Just generate and output recipe from recipe builder", action="store_true")
+    parser.add_argument("config", help="Path to config file")
+    args = parser.parse_args(args)
 
-if args.debug:
-    builder.config["logLevel"] = "DEBUG"
+    with open(args.config, "r") as file:
+        config = yaml.safe_load(file)
+    chdir(Path(args.config).resolve().parent)
 
-builder.build()
+    config["recipeProvider"] = "noto"
 
+    pd = GFBuilder(config)
+    if args.generate:
+        print(yaml.dump(pd.config))
+        return
+    pd.config_to_objects()
+    pd.build_graph()
+    pd.walk_graph()
+    if args.graph:
+        pd.draw_graph()
+    if not args.no_ninja:
+        subprocess.run(["ninja"])
+
+if __name__ == '__main__':
+    main()
