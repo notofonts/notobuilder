@@ -14,29 +14,9 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  first-run:
-    name: Set up environment
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-      - name: Do first-run script if necessary
-        run: make .init.stamp
-        if: github.repository != 'notofonts/noto-project-template'
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        name: First-run setup
-        if: github.repository != 'notofonts/noto-project-template'
-        with:
-          file_pattern: .init.stamp README.md requirements.txt OFL.txt
-          commit_message: "Personalize for this repo"
-
   build-all:
     runs-on: ubuntu-latest
     name: Build main TTFs
-    needs: first-run
     steps:
       - uses: actions/checkout@v2
       - name: Set up latest harfbuzz
@@ -49,6 +29,15 @@ jobs:
         with:
           path: ./subset-files
           key: subsets
+      - name: Do first-run script if necessary
+        run: make .init.stamp
+        if: github.repository != 'notofonts/noto-project-template'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        name: First-run setup
+        if: github.repository != 'notofonts/noto-project-template'
+        with:
+          file_pattern: .init.stamp README.md requirements.txt OFL.txt
+          commit_message: "Personalize for this repo"
       - name: Build fonts
         run: make build
       - name: Archive artifacts
