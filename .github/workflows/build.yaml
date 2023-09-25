@@ -68,7 +68,7 @@ jobs:
         run: |
           for family_path in fonts/*; do
             family=`basename $family_path`
-            . venv/bin/activate ; fontbakery check-googlefonts --configuration fontbakery.yml -l WARN --succinct --badges out/badges --html out/fontbakery/googlefonts-$family-report.html --ghmarkdown out/fontbakery/googlefonts-$family-report.md $family_path/googlefonts/*ttf/*ttf || true
+            . venv/bin/activate ; fontbakery check-googlefonts --configuration fontbakery.yml -F -l WARN --succinct --badges out/badges --html out/fontbakery/googlefonts-$family-report.html --ghmarkdown out/fontbakery/googlefonts-$family-report.md $family_path/googlefonts/*ttf/*ttf || true
           done
         continue-on-error: true
       - name: Archive artifacts
