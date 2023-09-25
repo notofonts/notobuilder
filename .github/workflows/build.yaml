@@ -211,6 +211,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: fontbuild
+          path: fonts
       - name: Check for appropriate tag
         id: check_tag
         run: . venv/bin/activate; python3 scripts/check-tag.py ${{ github.ref_name }}
