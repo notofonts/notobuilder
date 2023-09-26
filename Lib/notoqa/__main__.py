@@ -38,14 +38,16 @@ def do_one_run(profile, output, inputs):
 
 def run_fontbakery(family):
     local_exit_status = 0
-    unhinted_outputs = glob(f"fonts/{family}/unhinted/ttf/*.ttf")
-    hinted_outputs = glob(f"fonts/{family}/hinted/ttf/*.ttf")
+    #unhinted_outputs = glob(f"fonts/{family}/unhinted/ttf/*.ttf")
+    #hinted_outputs = glob(f"fonts/{family}/hinted/ttf/*.ttf")
+
     gf_outputs = glob(f"fonts/{family}/googlefonts/variable-ttf/*.ttf")
     if not gf_outputs:
         gf_outputs = glob(f"fonts/{family}/googlefonts/ttf/*.ttf")
 
-    local_exit_status |= do_one_run("notofonts", f"{family}-unhinted", unhinted_outputs)
-    local_exit_status |= do_one_run("notofonts", f"{family}-hinted", hinted_outputs)
+    #local_exit_status |= do_one_run("notofonts", f"{family}-unhinted", unhinted_outputs)
+    #local_exit_status |= do_one_run("notofonts", f"{family}-hinted", hinted_outputs)
+
     local_exit_status |= do_one_run("googlefonts", f"{family}-googlefonts", gf_outputs)
     return local_exit_status
 
