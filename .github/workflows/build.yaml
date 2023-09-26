@@ -66,10 +66,7 @@ jobs:
         run: make venv
       - name: Check with fontbakery
         run: |
-          for family_path in fonts/*; do
-            family=`basename $family_path`
-            . venv/bin/activate ; fontbakery check-googlefonts --configuration fontbakery.yml -F -l WARN --succinct --badges out/badges --html out/fontbakery/googlefonts-$family-report.html --ghmarkdown out/fontbakery/googlefonts-$family-report.md $family_path/googlefonts/*ttf/*ttf || true
-          done
+          . venv/bin/activate ; python3 -m notoqa
         continue-on-error: true
       - name: Archive artifacts
         uses: actions/upload-artifact@v2

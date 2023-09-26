@@ -3,6 +3,7 @@ import glob
 from gftools.actions.getlatestversion import get_latest_release
 from gftools.utils import download_files_from_archive
 from diffenator2 import ninja_diff, DFont
+from diffenator2.html import build_index_page
 
 if not "GITHUB_TOKEN" in os.environ:
     raise ValueError("GITHUB_TOKEN was not passed to the notoqa environment")
@@ -63,3 +64,5 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
         continue
     ninja_diff(dfonts_before, dfonts_now, out=os.path.join(outdir, family),
         user_wordlist=all_strings)
+
+build_index_page(outdir)
