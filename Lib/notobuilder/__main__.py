@@ -2,8 +2,8 @@ import subprocess
 from os import chdir
 from pathlib import Path
 
-import yaml
-from gftools.builder import GFBuilder
+from strictyaml import load
+from gftools.builder import GFBuilder, BASE_SCHEMA
 
 
 # These days I'm just gftools-builder in a funny hat.
@@ -18,7 +18,7 @@ def main(args=None):
     args = parser.parse_args(args)
 
     with open(args.config, "r") as file:
-        config = yaml.safe_load(file)
+        config = load(file.read(), BASE_SCHEMA)
     chdir(Path(args.config).resolve().parent)
 
     config["recipeProvider"] = "noto"
