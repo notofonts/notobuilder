@@ -65,4 +65,5 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
     ninja_diff(dfonts_before, dfonts_now, out=os.path.join(outdir, family),
         user_wordlist=all_strings)
 
-build_index_page(outdir)
+if glob.glob(outdir+"/*"):
+    build_index_page(outdir)
