@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Do first-run script if necessary
         run: make .init.stamp
         if: github.repository != 'notofonts/noto-project-template'
@@ -58,7 +58,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Make directories
         run: mkdir -p out/fontbakery out/badges
         continue-on-error: true
@@ -88,7 +88,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Install dependencies
         run: make venv
       - name: Make proof
@@ -114,7 +114,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Install dependencies
         run: make venv
       - name: Regression test
@@ -162,7 +162,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Install dependencies
         run: make venv
       - name: Rebuild website
@@ -200,7 +200,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - name: Install dependencies
         run: make venv
       - run: pip3 install 'git+https://github.com/googlefonts/gftools@noto#egg=gftools'
@@ -273,7 +273,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
       - name: Generate / update upstream.yaml
         run: python3 -m gftools.actions.updateupstream ${{ needs.create_release.outputs.url }} --config "${{ needs.create_release.outputs.config_file }}"
