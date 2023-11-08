@@ -1,6 +1,7 @@
 import subprocess
 from os import chdir
 from pathlib import Path
+import sys
 
 from strictyaml import load
 from gftools.builder import GFBuilder, BASE_SCHEMA
@@ -33,7 +34,8 @@ def main(args=None):
     if args.graph:
         pd.draw_graph()
     if not args.no_ninja:
-        subprocess.run(["ninja"])
+        result = subprocess.run(["ninja"])
+        sys.exit(result.returncode)
 
 if __name__ == '__main__':
     main()
