@@ -93,7 +93,7 @@ jobs:
         run: make venv
       - name: Make proof
         run: |
-          . venv/bin/activate; mkdir -p out/ out/proof; diffenator2 proof $(find fonts/*/unhinted/ttf -type f) -o out/proof
+          . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diffenator2 proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
