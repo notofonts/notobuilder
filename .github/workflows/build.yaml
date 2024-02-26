@@ -166,7 +166,7 @@ jobs:
       - name: Install dependencies
         run: make venv
       - name: Rebuild website
-        run: . venv/bin/activate; python3 scripts/template.py
+        run: . venv/bin/activate; python3 -m notobuilder.ghpages
       - name: Copy fonts to gh-pages dir
         run: cp -r fonts out
       - name: Deploy

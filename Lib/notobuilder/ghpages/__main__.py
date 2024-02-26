@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import re
 from glob import glob
@@ -10,6 +11,8 @@ from fontTools.ttLib import TTFont
 from gftools.utils import font_sample_text
 from sh import git
 
+
+DIFFBROWSERS_PROOF_RE = r"^(.*)-diffbrowsers_(.*).html$"
 
 class FileTreeMaker(object):
     def _recurse(self, parent_path, file_list, prefix, output_buf, level):
@@ -76,13 +79,26 @@ def main():
                     "path": result[4:],
                 }
             )
-
+        proofs = defaultdict(list)
+        for result in glob(f"out/proof/{basename}/*html"):
+            if m := re.match(DIFFBROWSERS_PROOF_RE, os.path.basename(result)):
+                style, prooftype = m[1], m[2]
+                proofs[prooftype].append(
+                    {
+                        "name": style,
+                        "path": result[4:],
+                    }
+                )
+        # Sort by style
+        for k, v in proofs.items():
+            proofs[k] = list(sorted(v, key=lambda l: l["name"]))
         families.append(
             {
                 "name": fname,
                 "fonttree": fonttree,
                 "fontbakery": fontbakery,
                 "diffenator": diffenator,
+                "proofs": proofs,
             }
         )
 

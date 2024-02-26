@@ -98,20 +98,28 @@
 					</li>
 					{{/diffenator}}
 				</ul>
-				{{/families}}
 
 				<h3>Proof sheets</h3>
 				<ul>
 					<li>
-						<a href="proof/glyphs.html">All glyphs</a>
+						Glyphs:
+							{{#proofs.glyphs}}<a href="{{path}}">{{name}}</a> {{/proofs.glyphs}}
 					</li>
 					<li>
-						<a href="proof/text.html">Sample text</a>
+						Text:
+							{{#proofs.text}}<a href="{{path}}">{{name}}</a> {{/proofs.text}}
 					</li>
 					<li>
-						<a href="proof/waterfall.html">Waterfall test</a>
+						Waterfall:
+							{{#proofs.waterfall}}<a href="{{path}}">{{name}}</a> {{/proofs.waterfall}}
+					</li>
+					<li>
+						Proofer:
+							{{#proofs.proofer}}<a href="{{path}}">{{name}}</a> {{/proofs.proofer}}
 					</li>
 				</ul>
+
+				{{/families}}
 			</div>
 		</div>
 	</body>
