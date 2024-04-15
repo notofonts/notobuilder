@@ -195,6 +195,7 @@ jobs:
     outputs:
       url: ${{ steps.upload.outputs.browser_download_url }}
       config_file: ${{ steps.check_tag.outputs.config_file }}
+      family: ${{ steps.check_tag.outputs.family }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -275,8 +276,6 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
-      - name: Generate / update upstream.yaml
-        run: python3 -m gftools.actions.updateupstream ${{ needs.create_release.outputs.url }} --config "${{ needs.create_release.outputs.config_file }}"
       - uses: actions/checkout@v3
         name: Check out Google Fonts repository
         with:
@@ -295,7 +294,7 @@ jobs:
       - name: Test fetch
         run: cd googlefonts; git fetch googlefonts main ; cd ..
       - name: Run the packager
-        run: gftools packager upstream.yaml googlefonts -p -y
+        run: gftools-packager `echo ${{needs.create_release.outputs.family}} | tr 'A-Z' 'a-z'` googlefonts --latest-release -p
         env:
           GH_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
