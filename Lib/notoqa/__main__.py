@@ -41,7 +41,7 @@ def run_fontbakery(family):
     #unhinted_outputs = glob(f"fonts/{family}/unhinted/ttf/*.ttf")
     #hinted_outputs = glob(f"fonts/{family}/hinted/ttf/*.ttf")
 
-    gf_outputs = glob(f"fonts/{family}/googlefonts/variable/*.ttf")
+    gf_outputs = glob(f"fonts/{family}/googlefonts/variable-ttf/*.ttf")
     if not gf_outputs:
         gf_outputs = glob(f"fonts/{family}/googlefonts/ttf/*.ttf")
 
