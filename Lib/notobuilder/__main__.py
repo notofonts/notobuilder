@@ -16,6 +16,7 @@ def main(args=None):
         "--graph", help="Draw a graph of the build process", action="store_true"
     )
     parser.add_argument("--no-ninja", help="Do not run ninja", action="store_true")
+    parser.add_argument("--no-static", help="Do not build statics", action="store_true")
     parser.add_argument(
         "--generate",
         help="Just generate and output recipe from recipe builder",
@@ -29,6 +30,8 @@ def main(args=None):
     chdir(Path(args.config).resolve().parent)
 
     config["recipeProvider"] = "noto"
+    if args.no_static:
+        config["buildStatic"] = False
     pd = GFBuilder(config)
     if args.generate:
         print(yaml.dump(pd.config))
