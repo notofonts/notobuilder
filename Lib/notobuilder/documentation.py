@@ -217,29 +217,19 @@ class FontDescription(object):
             txt += ", ".join(list(self.blocks.keys()))
         return txt
 
-    def desc_design(self):
-        txt = ""
-        notostyle = " " + self.style
-        notostyle = notostyle.replace(" Sans", "n unmodulated (“sans serif”)").replace(
-            "Serif", "modulated (“serif”)"
-        )
-        txt += notostyle
-        if self.is_mono:
-            txt += " monospaced "
-        txt += " design"
-        if self.variant:
-            txt += f" in the {self.noto.variant} variant"
-        return txt
-
     def build_desc(self):
         variables = dict(
             family_name=self.family_name,
             stub=self.stub,
             glyphs_count=self.glyphs_count,
-            desc_design=self.desc_design(),
             desc_scripts=self.desc_scripts(),
             features_count=self.features_count,
             unicodes_count=len(self.unicodes),
+            style=self.style,
+            variant=self.variant,
+            is_mono=self.is_mono,
+            is_display=self.is_display,
+            is_UI=self.is_UI,
             axes=self.axes,
             scripts=self.scripts,
             scripts_info=scripts_info,

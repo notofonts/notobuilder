@@ -1,5 +1,5 @@
 {%if stub %}{{stub}}{% else %}
-{{- family_name }} is a {{desc_design}}{{desc_scripts}}.{% endif %}
+{{- family_name }} is {%- include "design.md" %}{{desc_scripts}}.{% endif %}
 
 {{ family_name }} {%if axes%}has {{axes}}, {%endif%}contains {{ "{:,}".format(glyphs_count) }} glyphs,
 {%- if features_count%} {{ "{:,}".format(features_count) }} OpenType features,{% endif %}
