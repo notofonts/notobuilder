@@ -13,10 +13,14 @@ from gftools.utils import primary_script
 from gflanguages import LoadScripts
 import yaml
 from jinja2 import Environment, PackageLoader, select_autoescape
+from tidylib import tidy_document
+
 
 jinja = Environment(
     loader=PackageLoader(__package__, "templates"), autoescape=select_autoescape()
 )
+jinja.trim_blocks = True
+jinja.lstrip_blocks = True
 
 script_aliases = {}
 with open(Path(youseedee.ucd_dir()) / "PropertyValueAliases.txt", "r") as f:
@@ -62,7 +66,6 @@ class FontDescription(object):
 
         self.is_UI = "UI" in path.name
         self.is_mono = "Mono" in path.name
-        self.is_display = "Display" in path.name
         self.has_italic = False
         self.font = fontTools.ttLib.TTFont(path)
         self.noto_script = article.get(
@@ -182,56 +185,19 @@ class FontDescription(object):
             )
         self.features_count = len(sorted(list(features)))
 
-    def get_script_name(self, script):
-        return scripts_info.get(script).name
-
-    def desc_scripts(self):
-        scripts = list(self.scripts.keys())
-        txt = ""
-        preposition = "in"
-        if self.is_UI:
-            txt += " for app and website user interfaces"
-        elif self.is_display:
-            txt += " for texts in larger font sizes"
-        else:
-            txt += " for texts"
-        if len(scripts):
-            txt += f" {preposition} "
-            if scripts[0] in ("Zsym", "Zsye"):
-                txt += self.get_script_name(scripts[0])
-            else:
-                txt += "the "
-                r = scripts_info[scripts[0]]
-                if r.historical:
-                    txt += "historical "
-                if r.fictional:
-                    txt += "fictional "
-                txt += "_%s_ script" % (self.get_script_name(scripts[0]))
-            if len(scripts) > 1:
-                txt += f" and {preposition} "
-                txt += ", ".join(
-                    ["_" + self.get_script_name(script) + "_" for script in scripts[1:]]
-                )
-        else:
-            txt += f" that use "
-            txt += ", ".join(list(self.blocks.keys()))
-        return txt
-
     def build_desc(self):
         variables = dict(
             family_name=self.family_name,
             stub=self.stub,
             glyphs_count=self.glyphs_count,
-            desc_scripts=self.desc_scripts(),
             features_count=self.features_count,
             unicodes_count=len(self.unicodes),
             style=self.style,
             variant=self.variant,
             is_mono=self.is_mono,
-            is_display=self.is_display,
             is_UI=self.is_UI,
             axes=self.axes,
-            scripts=self.scripts,
+            scripts=list(self.scripts.keys()),
             scripts_info=scripts_info,
             blocks=list(self.blocks.keys()),
         )
@@ -242,7 +208,10 @@ class FontDescription(object):
     def save(self, path, md):
         logging.info(f"Saving {path}")
         with open(path, "w", encoding="utf-8") as f:
-            f.write(markdown.markdown(md) + "\n")
+            document, errors = tidy_document(
+                markdown.markdown(md), {"show-body-only": "y"}
+            )
+            f.write(document)
 
 
 def main():
