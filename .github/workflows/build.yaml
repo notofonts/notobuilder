@@ -111,6 +111,8 @@ jobs:
         with:
           name: fontbuild
           path: fonts
+      - name: Set up diffenator3
+        uses: notofonts/install-diffenator3-action@main
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
