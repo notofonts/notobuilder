@@ -25,6 +25,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          touch venv/touchfile
       - name: Do first-run script if necessary
         run: make .init.stamp
         if: github.repository != 'notofonts/noto-project-template'
@@ -62,8 +70,14 @@ jobs:
       - name: Make directories
         run: mkdir -p out/fontbakery out/badges
         continue-on-error: true
-      - name: Install dependencies
-        run: make venv
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          touch venv/touchfile
       - name: Check with fontbakery
         run: |
           . venv/bin/activate ; python3 -m notoqa
@@ -89,8 +103,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install dependencies
-        run: make venv
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          touch venv/touchfile
       - name: Make proof
         run: |
           . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diffenator2 proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
@@ -117,8 +137,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install dependencies
-        run: make venv
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          touch venv/touchfile
       - name: Regression test
         run: . venv/bin/activate; python3 -m notoqa.regression
         env:
@@ -165,8 +191,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install dependencies
-        run: make venv
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          touch venv/touchfile
       - name: Rebuild website
         run: . venv/bin/activate; python3 -m notobuilder.ghpages
       - name: Copy fonts to gh-pages dir
@@ -204,8 +236,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install dependencies
-        run: make venv
       - run: pip3 install 'git+https://github.com/googlefonts/gftools'
       - name: Download font zip
         uses: actions/download-artifact@v4
