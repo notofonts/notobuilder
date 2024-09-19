@@ -1,5 +1,6 @@
 import subprocess
 from os import chdir
+import os
 from pathlib import Path
 import yaml
 import sys
@@ -32,6 +33,9 @@ def main(args=None):
     config["recipeProvider"] = "noto"
     if args.no_static:
         config["buildStatic"] = False
+    # Only build OTFs if it's a release
+    if "refs/tags" not in os.environ.get("GITHUB_REF", ""):
+        config["buildOTF"] = False
     pd = GFBuilder(config)
     if args.generate:
         print(yaml.dump(pd.config))
