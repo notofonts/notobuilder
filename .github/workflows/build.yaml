@@ -31,7 +31,7 @@ jobs:
           enable-cache: true
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
           touch venv/touchfile
       - name: Do first-run script if necessary
         run: make .init.stamp
@@ -76,7 +76,7 @@ jobs:
           enable-cache: true
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
           touch venv/touchfile
       - name: Check with fontbakery
         run: |
@@ -109,7 +109,7 @@ jobs:
           enable-cache: true
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
           touch venv/touchfile
       - name: Make proof
         run: |
@@ -143,7 +143,7 @@ jobs:
           enable-cache: true
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
           touch venv/touchfile
       - name: Regression test
         run: . venv/bin/activate; python3 -m notoqa.regression
@@ -197,7 +197,7 @@ jobs:
           enable-cache: true
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
           touch venv/touchfile
       - name: Rebuild website
         run: . venv/bin/activate; python3 -m notobuilder.ghpages
