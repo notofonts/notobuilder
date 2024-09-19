@@ -1,5 +1,6 @@
 import os
 import glob
+import shutil
 from gftools.actions.getlatestversion import get_latest_release
 from gftools.utils import download_files_from_archive
 from diffenator2.html import build_index_page
@@ -100,6 +101,9 @@ for family in [os.path.basename(x) for x in glob.glob("fonts/*")]:
                 )
             else:
                 print(f"Could not find a match for {before}")
+
+    # Remove the fonts_before directory
+    shutil.rmtree(fonts_before_dir)
 
 if glob.glob(outdir + "/*"):
     build_index_page(outdir)
