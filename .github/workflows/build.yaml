@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
@@ -71,7 +71,7 @@ jobs:
         run: mkdir -p out/fontbakery out/badges
         continue-on-error: true
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
@@ -104,7 +104,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
@@ -138,7 +138,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
@@ -192,7 +192,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
@@ -243,7 +243,7 @@ jobs:
           name: fontbuild
           path: fonts
       - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
+        uses: eifinger/setup-uv@v3
         with:
           enable-cache: true
       - name: Install Python deps
