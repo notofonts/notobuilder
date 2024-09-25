@@ -242,6 +242,14 @@ jobs:
         with:
           name: fontbuild
           path: fonts
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
+          touch venv/touchfile
       - name: Check for appropriate tag
         id: check_tag
         run: . venv/bin/activate; python3 scripts/check-tag.py ${{ github.ref_name }}
