@@ -46,7 +46,7 @@ def main(args=None):
     if args.graph:
         pd.draw_graph()
     if not args.no_ninja:
-        result = subprocess.run(["ninja"])
+        result = subprocess.run(["ninja", "-f", pd.ninja_file_name])
         sys.exit(result.returncode)
 
 
