@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Install the latest version of uv
         uses: eifinger/setup-uv@v1
         with:
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Make directories
         run: mkdir -p out/fontbakery out/badges
         continue-on-error: true
@@ -102,7 +102,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Install the latest version of uv
         uses: eifinger/setup-uv@v1
         with:
@@ -136,7 +136,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Install the latest version of uv
         uses: eifinger/setup-uv@v1
         with:
@@ -190,7 +190,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - name: Install the latest version of uv
         uses: eifinger/setup-uv@v1
         with:
@@ -235,7 +235,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools'
       - name: Download font zip
         uses: actions/download-artifact@v4
@@ -314,7 +314,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
       - uses: actions/checkout@v4
         name: Check out Google Fonts repository
