@@ -204,11 +204,10 @@ jobs:
       - name: Copy fonts to gh-pages dir
         run: cp -r fonts out
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+        uses: actions/upload-pages-artifact@v3.0.1
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          path: ./out
       - name: gen zip file name
         id: zip-name
         shell: bash
@@ -219,6 +218,21 @@ jobs:
         with:
           name: ${{ env.ZIP_NAME }}
           path: out
+
+  deploy:
+    name: Deploy website to GitHub Pages
+    needs: report
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   create_release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
