@@ -61,8 +61,8 @@ jobs:
         with:
           name: fontbuild
           path: fonts
-      - name: Install xml2/xslt dev
-        run: sudo apt-get install libxml2-dev libxslt1-dev
+      - name: Install xml2/xslt/cairo dev
+        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -99,6 +99,8 @@ jobs:
         with:
           name: fontbuild
           path: fonts
+      - name: Install xml2/xslt/cairo dev
+        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -141,6 +143,8 @@ jobs:
         uses: eifinger/setup-uv@v1
         with:
           enable-cache: true
+      - name: Install xml2/xslt/cairo dev
+        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Install Python deps
         run: |
           uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
