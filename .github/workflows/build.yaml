@@ -62,7 +62,7 @@ jobs:
           name: fontbuild
           path: fonts
       - name: Set up Fontspector
-        uses: notofonts/setup-fontspector
+        uses: notofonts/setup-fontspector@main
       - name: Make directories
         run: mkdir -p out/fontspector out/badges
         continue-on-error: true
