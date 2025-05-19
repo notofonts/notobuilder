@@ -63,6 +63,8 @@ jobs:
           path: fonts
       - name: Set up Fontspector
         uses: notofonts/setup-fontspector@main
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Make directories
         run: mkdir -p out/fontspector out/badges
         continue-on-error: true
