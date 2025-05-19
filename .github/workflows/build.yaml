@@ -68,6 +68,14 @@ jobs:
       - name: Make directories
         run: mkdir -p out/fontspector out/badges
         continue-on-error: true
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
+          touch venv/touchfile
       - name: Check with fontspector
         run: |
           . venv/bin/activate ; python3 -m notoqa
