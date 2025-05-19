@@ -50,8 +50,8 @@ jobs:
           name: fontbuild
           path: fonts
 
-  fontbakery-googlefonts:
-    name: Check with Fontbakery
+  fontspector-googlefonts:
+    name: Check with fontspector
     runs-on: ubuntu-latest
     needs: build-all
     steps:
@@ -61,31 +61,19 @@ jobs:
         with:
           name: fontbuild
           path: fonts
-      - name: Install xml2/xslt/cairo dev
-        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Set up Fontspector
+        uses: notofonts/setup-fontspector
       - name: Make directories
-        run: mkdir -p out/fontbakery out/badges
+        run: mkdir -p out/fontspector out/badges
         continue-on-error: true
-      - name: Install the latest version of uv
-        uses: eifinger/setup-uv@v1
-        with:
-          enable-cache: true
-      - name: Install Python deps
-        run: |
-          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
-          touch venv/touchfile
-      - name: Check with fontbakery
+      - name: Check with fontspector
         run: |
           . venv/bin/activate ; python3 -m notoqa
         continue-on-error: true
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fontbakery-googlefonts
+          name: fontspector-googlefonts
           path: out
 
   proof:
@@ -164,7 +152,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs:
-      - fontbakery-googlefonts
+      - fontspector-googlefonts
       - proof
       - regression
     steps:
@@ -174,10 +162,10 @@ jobs:
         with:
           name: fontbuild
           path: fonts
-      - name: Download fontbakery-googlefonts zip
+      - name: Download fontspector-googlefonts zip
         uses: actions/download-artifact@v4
         with:
-          name: fontbakery-googlefonts
+          name: fontspector-googlefonts
           path: out
       - name: Download proof zip
         uses: actions/download-artifact@v4

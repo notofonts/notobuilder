@@ -5,7 +5,7 @@ import subprocess
 
 exit_status = 0
 
-os.makedirs("out/fontbakery", exist_ok=True)
+os.makedirs("out/fontspector", exist_ok=True)
 families = [os.path.basename(x) for x in glob("fonts/*")]
 
 
@@ -13,30 +13,30 @@ def do_one_run(profile, output, inputs):
     if not inputs:
         return 0
     args = [
-        "fontbakery",
-        f"check-{profile}",
+        "fontspector",
+        "--profile", "googlefonts"
         "--configuration",
-        "fontbakery.yml",
+        "fontspector.yml",
         "-F",
         "-l",
-        "WARN",
+        "warn",
         "--succinct",
         "--badges",
         "out/badges",
         "--html",
-        f"out/fontbakery/notofonts-{output}-report.html",
+        f"out/fontspector/notofonts-{output}-report.html",
         "--ghmarkdown",
-        f"out/fontbakery/notofonts-{output}-report.md",
+        f"out/fontspector/notofonts-{output}-report.md",
         *inputs,
     ]
     args = " ".join(args)
     return subprocess.run(
-        f". venv/bin/activate; {args}",
+        args,
         shell=True,
     ).returncode
 
 
-def run_fontbakery(family):
+def run_fontspector(family):
     local_exit_status = 0
     #unhinted_outputs = glob(f"fonts/{family}/unhinted/ttf/*.ttf")
     #hinted_outputs = glob(f"fonts/{family}/hinted/ttf/*.ttf")
@@ -53,6 +53,6 @@ def run_fontbakery(family):
 
 
 for family in families:
-    exit_status |= run_fontbakery(family)
+    exit_status |= run_fontspector(family)
 
 sys.exit(exit_status)
