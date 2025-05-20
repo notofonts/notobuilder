@@ -12,11 +12,13 @@ families = [os.path.basename(x) for x in glob("fonts/*")]
 def do_one_run(profile, output, inputs):
     if not inputs:
         return 0
+    config = []
+    if os.path.exists("fontspector.yml"):
+        config = ["--config", "fontspector.yml"]
     args = [
         "fontspector",
         "--profile", "googlefonts",
-        "--configuration",
-        "fontspector.yml",
+        *config,
         "--full-lists",
         "-l",
         "warn",
