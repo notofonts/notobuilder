@@ -62,12 +62,20 @@ jobs:
           name: fontbuild
           path: fonts
       - name: Set up Fontspector
-        uses: fonttools/setup-fontspector@main
+        uses: notofonts/setup-fontspector@main
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Make directories
         run: mkdir -p out/fontspector out/badges
         continue-on-error: true
+      - name: Install the latest version of uv
+        uses: eifinger/setup-uv@v1
+        with:
+          enable-cache: true
+      - name: Install Python deps
+        run: |
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
+          touch venv/touchfile
       - name: Check with fontspector
         run: |
           . venv/bin/activate ; python3 -m notoqa
@@ -106,14 +114,6 @@ jobs:
       - name: Make proof
         run: |
           . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diffenator2 proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: proof
-          path: out
-
-  regression:
-    name: Regression test
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -310,6 +310,14 @@ jobs:
           body: ${{ env.RELEASE_NOTES }}
   google_fonts_pr:
     runs-on: ubuntu-latest
+    environment: googlefonts
+    name: Submit PR to Google Fonts
+    needs: create_release
+    steps:
+      - name: Check SSH_KEY is set
+        run: |
+          if [[ "${{ secrets.SSH_KEY }}" == "" ]];
+          then
             echo "::error file=sources/config.yaml,title=SSH_KEY was not set in repository secrets::Generate an SSH key (https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key), add the public key to your GitHub account (https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) and add the private key to an environment secret called SSH_KEY in an environment called 'googlefonts' by going to $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/settings/secrets/actions";
             exit 1
           fi
