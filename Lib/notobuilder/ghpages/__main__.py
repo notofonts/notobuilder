@@ -49,11 +49,12 @@ class FileTreeMaker(object):
 def main():
     commit = git("rev-parse", "--short", "HEAD")
     github_repo = os.environ.get("GITHUB_REPOSITORY", "")
+    reponame = github_repo.split("/")[1]
     repo_url = (
         os.environ.get("GITHUB_SERVER_URL", "https://github.com/") + "/" + github_repo
     )
 
-    raw_url = "https://raw.githubusercontent.com/" + github_repo + "/gh-pages/badges"
+    raw_url = "https://notofonts.github.io/" + reponame + "/badges"
     shields_url = "https://img.shields.io/endpoint?url=" + quote(raw_url, safe="")
 
     families = []
@@ -61,16 +62,16 @@ def main():
         basename = os.path.basename(family)
         fname = re.sub(r"([a-z])([A-Z])", r"\1 \2", basename)
         fonttree = FileTreeMaker().make(family)
-        fontbakery = []
-        for result in glob(f"out/fontbakery/*{basename}*html"):
+        fontspector = []
+        for result in glob(f"out/fontspector/*{basename}*html"):
             result = result[4:]
             if "unhinted" in result:
-                fontbakery.append({"name": "Noto fonts, unhinted", "path": result})
+                fontspector.append({"name": "Noto fonts, unhinted", "path": result})
             elif "hinted" in result:
-                fontbakery.append({"name": "Noto fonts, hinted", "path": result})
+                fontspector.append({"name": "Noto fonts, hinted", "path": result})
             elif "googlefonts" in result:
-                fontbakery.append({"name": "Google Fonts", "path": result})
-        fontbakery = list(reversed(sorted(fontbakery, key=lambda l: l["name"])))
+                fontspector.append({"name": "Google Fonts", "path": result})
+        fontspector = list(reversed(sorted(fontspector, key=lambda l: l["name"])))
         diffenator = []
         for result in glob(f"out/qa/{basename}/Diffenator/*/report.html"):
             diffenator.append(
@@ -96,7 +97,7 @@ def main():
             {
                 "name": fname,
                 "fonttree": fonttree,
-                "fontbakery": fontbakery,
+                "fontspector": fontspector,
                 "diffenator": diffenator,
                 "proofs": proofs,
             }
