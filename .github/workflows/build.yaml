@@ -62,7 +62,7 @@ jobs:
           name: fontbuild
           path: fonts
       - name: Set up Fontspector
-        uses: notofonts/setup-fontspector@main
+        uses: fonttools/setup-fontspector@main
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Make directories
