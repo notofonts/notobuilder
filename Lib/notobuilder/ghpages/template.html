@@ -72,23 +72,26 @@
 
 				<h3>Tests</h3>
 
-				<img src="{{{shields_url}}}%2Foverall.json" />
-				<img src="{{{shields_url}}}%2FGoogleFonts.json" />
-				<img src="{{{shields_url}}}%2FNotoFonts.json" />
-				<img src="{{{shields_url}}}%2FOutlineCorrectnessChecks.json" />
+				<img src="{{{shields_url}}}%2FFontspectorQA.json" />
+				<img src="{{{shields_url}}}%2FFamilyChecks.json" />
+				<img src="{{{shields_url}}}%2FFontFileChecks.json" />
+				<img src="{{{shields_url}}}%2FGlyphsetChecks.json" />
+				<img src="{{{shields_url}}}%2FNametableChecks.json" />
+				<img src="{{{shields_url}}}%2FOpentypeSpecificationChecks.json" />
+				<img src="{{{shields_url}}}%2FOutlineChecks.json" />
 				<img src="{{{shields_url}}}%2FShapingChecks.json" />
-				<img src="{{{shields_url}}}%2FUniversal.json" />
+				<img src="{{{shields_url}}}%2FUniversalProfileChecks.json" />
 
 				{{#families}}
 
 				<h4>{{name}}</h4>
 
 				<ul>
-					{{#fontbakery}}
+					{{#fontspector}}
 					<li>
-						<a href="{{path}}">FontBakery Report ({{name}})</a>
+						<a href="{{path}}">Fontspector Report ({{name}})</a>
 					</li>
-					{{/fontbakery}}
+					{{/fontspector}}
 				</ul>
 
 				<ul>
