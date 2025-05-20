@@ -14,7 +14,7 @@ def do_one_run(profile, output, inputs):
         return 0
     args = [
         "fontspector",
-        "--profile", "googlefonts"
+        "--profile", "googlefonts",
         "--configuration",
         "fontspector.yml",
         "--full-lists",
