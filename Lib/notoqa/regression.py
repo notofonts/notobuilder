@@ -1,13 +1,43 @@
-import os
 import glob
-import shutil
-from gftools.actions.getlatestversion import get_latest_release
-from gftools.utils import download_files_from_archive
-from diffenator2.html import build_index_page
-import subprocess
+import os
 import re
+import shutil
+import subprocess
 
-if not "GITHUB_TOKEN" in os.environ:
+from diffenator2.html import build_index_page
+from gftools.utils import download_files_from_archive
+from github import Github
+
+
+def get_latest_release(family, user=None, repo=None):
+    if not (user and repo):
+        repo_url = (
+            subprocess.check_output(["git", "remote", "get-url", "origin"])
+            .decode("utf8")
+            .strip()
+        )
+        url_split = repo_url.split("/")
+        user, repo = url_split[3], url_split[4]
+
+    g = Github(os.environ["GITHUB_TOKEN"])
+    repo = g.get_repo(user + "/" + repo)
+    for release in repo.get_releases():
+        if release.draft:
+            continue
+        m = re.match(r"^(.*)-(v[\d.]+)", release.tag_name)
+        if not m:
+            print(f"Unparsable release {release.tag_name} in {user}/{repo}")
+            continue
+        thisfamily, version = m[1], m[2]
+        if thisfamily != family:
+            continue
+        assets = release.get_assets()
+        download_url = assets[0].browser_download_url
+        return version, download_url
+    return None, None
+
+
+if "GITHUB_TOKEN" not in os.environ:
     raise ValueError("GITHUB_TOKEN was not passed to the notoqa environment")
 os.environ["GH_TOKEN"] = os.environ["GITHUB_TOKEN"]
 
