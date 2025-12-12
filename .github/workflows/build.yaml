@@ -45,7 +45,7 @@ jobs:
       - name: Build fonts
         run: make build
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: fontbuild
           path: fonts
@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download font build zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontbuild
           path: fonts
@@ -81,7 +81,7 @@ jobs:
           . venv/bin/activate ; python3 -m notoqa
         continue-on-error: true
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: fontspector-googlefonts
           path: out
@@ -93,7 +93,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download font build zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontbuild
           path: fonts
@@ -115,7 +115,7 @@ jobs:
         run: |
           . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diffenator2 proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: proof
           path: out
@@ -127,7 +127,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download font build zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontbuild
           path: fonts
@@ -152,7 +152,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: regression
           path: out
@@ -168,23 +168,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download font zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontbuild
           path: fonts
       - name: Download fontspector-googlefonts zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontspector-googlefonts
           path: out
       - name: Download proof zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: proof
           path: out
         continue-on-error: true
       - name: Download regression test zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: regression
           path: out
@@ -218,7 +218,7 @@ jobs:
         # Set the archive name to repo name + "-assets" e.g "MavenPro-assets"
         run: echo "ZIP_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')-fonts" >> $GITHUB_ENV
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.ZIP_NAME }}
           path: out
@@ -256,7 +256,7 @@ jobs:
           python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools'
       - name: Download font zip
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: fontbuild
           path: fonts
