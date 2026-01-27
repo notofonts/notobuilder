@@ -142,7 +142,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install xml2/xslt/cairo dev
-        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
+        run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Install Python deps
         run: |
           uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
