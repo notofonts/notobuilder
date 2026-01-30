@@ -21,7 +21,6 @@ dependencies = [
 	"ttfautohint-py",
 	"ufo2ft>=2.27.0",
 	"gftools @ git+https://github.com/googlefonts/gftools@main",
-	"diffenator2>=0.2.12",
     "chevron>=0.10.0",
     "sh>=1.14.1",
 ]
