@@ -208,7 +208,7 @@ jobs:
       - name: Copy fonts to gh-pages dir
         run: cp -r fonts out
       - name: Deploy
-        uses: actions/upload-pages-artifact@v3.0.1
+        uses: actions/upload-pages-artifact@v4.0.0
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           path: ./out
