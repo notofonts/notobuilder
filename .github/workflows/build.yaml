@@ -22,7 +22,7 @@ jobs:
       - name: Set up latest harfbuzz
         uses: notofonts/install-harfbuzz-action@main
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -100,7 +100,7 @@ jobs:
       - name: Install xml2/xslt/cairo dev
         run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -134,7 +134,7 @@ jobs:
       - name: Set up diffenator3
         uses: notofonts/install-diffenator3-action@main
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -190,7 +190,7 @@ jobs:
           path: out
         continue-on-error: true
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -251,7 +251,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools'
@@ -330,7 +330,7 @@ jobs:
           fi
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
