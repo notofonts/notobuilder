@@ -1,12 +1,29 @@
+from pathlib import Path
 import glob
 import os
 import re
 import shutil
 import subprocess
 
-from diffenator2.html import build_index_page
 from gftools.utils import download_files_from_archive
 from github import Github
+
+
+def build_index_page(fp):
+    html_files = []
+    for dirpath, _, filenames in os.walk(fp):
+        for f in filenames:
+            if not f.endswith(".html"):
+                continue
+            html_files.append(os.path.join(dirpath, f))
+    html_files.sort()
+    # make paths relative and posix since web urls are forward slash
+    assert len(html_files) > 0, f"No html docs found in {fp}."
+    html_files_rel = [str(Path(os.path.relpath(f, fp)).as_posix()) for f in html_files]
+    a_hrefs = [f"<p><a href='{f}'>{f}</a></p>" for f in html_files_rel]
+    out = os.path.join(fp, "diffenator-report.html")
+    with open(out, "w") as doc:
+        doc.write("\n".join(a_hrefs))
 
 
 def get_latest_release(family, user=None, repo=None):

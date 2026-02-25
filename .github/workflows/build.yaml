@@ -64,7 +64,7 @@ jobs:
       - name: Set up Fontspector
         uses: fonttools/setup-fontspector@main
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Make directories
         run: mkdir -p out/fontspector out/badges
         continue-on-error: true
@@ -97,6 +97,8 @@ jobs:
         with:
           name: fontbuild
           path: fonts
+      - name: Set up diffenator3
+        uses: notofonts/install-diffenator3-action@main
       - name: Install xml2/xslt/cairo dev
         run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
@@ -113,7 +115,7 @@ jobs:
           touch venv/touchfile
       - name: Make proof
         run: |
-          . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diffenator2 proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
+          . venv/bin/activate; mkdir -p out/ out/proof; for i in fonts/* ; do family=`basename $i`; diff3proof $(find fonts/$family/unhinted/ttf -type f) -o out/proof/$family; done
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
