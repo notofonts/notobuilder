@@ -117,7 +117,7 @@ jobs:
           touch venv/touchfile
       - name: Make proof
         run: |
-          . venv/bin/activate; python3 -m notoqa.diff3proof
+          . venv/bin/activate; python3 -m notoqa.proof
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
