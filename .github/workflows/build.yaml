@@ -99,6 +99,8 @@ jobs:
           path: fonts
       - name: Set up diffenator3
         uses: notofonts/install-diffenator3-action@main
+        with:
+          diff3proof: "true"
       - name: Install xml2/xslt/cairo dev
         run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
