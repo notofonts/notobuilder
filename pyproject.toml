@@ -23,4 +23,5 @@ dependencies = [
 	"gftools @ git+https://github.com/googlefonts/gftools@main",
     "chevron>=0.10.0",
     "sh>=1.14.1",
+    "font-v",
 ]
