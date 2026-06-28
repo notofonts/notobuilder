@@ -36,7 +36,7 @@ jobs:
       - name: Do first-run script if necessary
         run: make .init.stamp
         if: github.repository != 'notofonts/noto-project-template'
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v7
         name: First-run setup
         if: github.repository != 'notofonts/noto-project-template'
         with:
