@@ -25,3 +25,6 @@ dependencies = [
     "sh>=1.14.1",
     "font-v",
 ]
+
+[project.scripts]
+notobuilder = "notobuilder.__main__:main"
