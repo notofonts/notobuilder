@@ -14,14 +14,7 @@ authors = [
     { name = "Simon Cozens", email = "simon@simon-cozens.org" },
 ]
 dependencies = [
-	"fonttools>=4.51.0, != 4.52.1, != 4.52.2, != 4.52.3, != 4.52.4",
-	"ufomerge>=1.6.1",
-	"fontmake>=3.3",
-	"glyphsLib>=6.0.7",
-	"ttfautohint-py",
-	"ufo2ft>=2.27.0",
-	"gftools @ git+https://github.com/googlefonts/gftools@main",
-    "chevron>=0.10.0",
-    "sh>=1.14.1",
+    "chevron==0.14.0",
+    "sh>=2.2.4",
     "font-v",
 ]
