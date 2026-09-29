@@ -145,8 +145,6 @@ jobs:
         uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
-      - name: Install xml2/xslt/cairo dev
-        run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Install Python deps
         run: |
           uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt ; uv pip install gftools
@@ -201,11 +199,9 @@ jobs:
         uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
-      - name: Install xml2/xslt/cairo dev
-        run: sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Install Python deps
         run: |
-          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt
+          uv venv venv; . venv/bin/activate ; uv pip install -r requirements.txt ; uv pip install gftools
           touch venv/touchfile
       - name: Rebuild website
         run: . venv/bin/activate; python3 -m notobuilder.ghpages
