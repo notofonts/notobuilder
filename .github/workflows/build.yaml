@@ -22,7 +22,7 @@ jobs:
       - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@v1.24.0
       - name: Set up gftools-builder
-        run: cargo binstall gftools-builder --version 3.0.0-alpha --dry-run --pkg-url "{ repo }/releases/download/{name}-v{ version }/{ name }-{ target }{ archive-suffix }"
+        run: cargo binstall gftools-builder --version 3.0.0-alpha --pkg-url "{ repo }/releases/download/{name}-v{ version }/{ name }-{ target }{ archive-suffix }"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
