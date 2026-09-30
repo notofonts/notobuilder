@@ -19,8 +19,10 @@ jobs:
     name: Build main TTFs
     steps:
       - uses: actions/checkout@v4
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.24.0
       - name: Set up gftools-builder
-        run: cargo install --git https://github.com/simoncozens/gftools-rust.git gftools-builder
+        run: cargo binstall gftools-builder --version 3.0.0-alpha --dry-run --pkg-url "{ repo }/releases/download/{name}-v{ version }/{ name }-{ target }{ archive-suffix }"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
