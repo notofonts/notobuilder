@@ -24,7 +24,7 @@ jobs:
       - name: Set up gftools-builder
         run: cargo binstall gftools-builder --version 3.0.0-alpha --pkg-url "{ repo }/releases/download/{name}-v{ version }/{ name }-{ target }{ archive-suffix }"
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -106,7 +106,7 @@ jobs:
       - name: Install xml2/xslt/cairo dev
         run: sudo apt-get update && sudo apt-get install libxml2-dev libxslt1-dev libcairo2-dev
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -140,7 +140,7 @@ jobs:
       - name: Set up diffenator3
         uses: notofonts/install-diffenator3-action@main
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -194,7 +194,7 @@ jobs:
           path: out
         continue-on-error: true
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install the latest version of uv
@@ -253,7 +253,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Download font zip
@@ -331,7 +331,7 @@ jobs:
           fi
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - run: pip3 install 'git+https://github.com/googlefonts/gftools#egg=gftools'
