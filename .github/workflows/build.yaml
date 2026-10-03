@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.24.0
+        uses: cargo-bins/cargo-binstall@v1.25.1
       - name: Set up gftools-builder
         run: cargo binstall gftools-builder --version 3.0.0-alpha --pkg-url "{ repo }/releases/download/{name}-v{ version }/{ name }-{ target }{ archive-suffix }"
       - name: Set up Python
