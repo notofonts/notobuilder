@@ -17,4 +17,5 @@ dependencies = [
     "chevron==0.14.0",
     "sh>=2.2.4",
     "font-v",
+    "PyYAML", # scripts/check-tag needs it
 ]
