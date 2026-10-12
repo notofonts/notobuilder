@@ -19,3 +19,6 @@ dependencies = [
     "font-v",
     "PyYAML", # scripts/check-tag needs it
 ]
+
+[project.scripts]
+notobuilder = "notobuilder.__main__:main"
